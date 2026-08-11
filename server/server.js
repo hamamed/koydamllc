@@ -246,7 +246,9 @@ app.post('/api/admin/login', rateLimit({ key: 'login', max: 8, windowMs: 10 * 60
       return res.status(503).json({
         error: `ADMIN_PASSWORD_HASH is unusable — ${why}. The server received ${length} characters; `
           + 'a valid hash is 97 (32-char salt, colon, 64-char digest). '
-          + 'Regenerate it, paste the whole value with no quotes, and restart.',
+          + `This value came from ${envLoader.sourceOf('ADMIN_PASSWORD_HASH')} — `
+          + 'fix it there, not anywhere else, then restart.'
+          + (length === 13 ? ' A 13-character value is usually the password itself rather than its hash.' : ''),
       });
     }
     return res.status(401).json({ error: 'Incorrect email or password.' });

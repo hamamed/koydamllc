@@ -166,8 +166,13 @@ function warnIfMisconfigured() {
   } else if (process.env.ADMIN_PASSWORD_HASH) {
     const info = inspectHash(process.env.ADMIN_PASSWORD_HASH);
     if (!info.ok) {
+      const source = require('./env').sourceOf('ADMIN_PASSWORD_HASH');
       console.warn(`[auth] ADMIN_PASSWORD_HASH is unusable: ${info.problem} (${info.length} characters stored).`);
+      console.warn(`[auth] The value came from ${source} — correct it there.`);
       console.warn('[auth] Expected 97 characters: 32-char salt, a colon, then a 64-char digest.');
+      if (info.length === 13) {
+        console.warn('[auth] A 13-character value is usually the password itself, not its hash.');
+      }
       console.warn('[auth] Regenerate with: node server/scripts/hash-password.js "your password"');
     }
   } else if (process.env.NODE_ENV === 'production') {

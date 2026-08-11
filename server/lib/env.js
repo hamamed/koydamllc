@@ -45,10 +45,21 @@ function parse(text) {
 }
 
 /**
+ * Where each key came from. Knowing this matters: a stale value in a hosting
+ * panel silently overrides a correct one in a file, and without this map the
+ * resulting error looks identical to a typo in the file.
+ */
+const origins = new Map();
+
+/**
  * Loads configuration and returns a description of where it came from,
  * so the server can report it at boot.
  */
 function load() {
+  // Anything already present came from the real environment — a hosting
+  // panel, pm2, systemd, docker — and outranks every file.
+  for (const key of Object.keys(process.env)) origins.set(key, 'the hosting panel / real environment');
+
   const candidates = [
     process.env.KOYDAM_ENV_FILE,
     path.join(PROJECT_ROOT, '.env'),
@@ -69,15 +80,27 @@ function load() {
 
     const values = parse(text);
     const applied = [];
+    const overridden = [];
+
     for (const [key, value] of Object.entries(values)) {
-      if (key in process.env) continue; // never override a real env var
+      if (key in process.env) {
+        overridden.push(key); // a higher-precedence source already set it
+        continue;
+      }
       process.env[key] = value;
+      origins.set(key, file);
       applied.push(key);
     }
-    sources.push({ file, found: Object.keys(values).length, applied: applied.length });
+
+    sources.push({ file, found: Object.keys(values).length, applied: applied.length, overridden });
   }
 
   return sources;
+}
+
+/** Returns a human-readable description of where a key's value came from. */
+function sourceOf(key) {
+  return origins.get(key) || 'an unknown source';
 }
 
 /** Human-readable summary of where configuration came from. */
@@ -85,10 +108,17 @@ function describe(sources) {
   if (!sources || !sources.length) {
     return 'Configuration: environment variables only (no config file found).';
   }
-  const lines = sources.map(
-    (s) => `  ${s.file} — ${s.found} value${s.found === 1 ? '' : 's'}, ${s.applied} applied`,
-  );
+
+  const lines = [];
+  for (const s of sources) {
+    lines.push(`  ${s.file} — ${s.found} value${s.found === 1 ? '' : 's'}, ${s.applied} applied`);
+    if (s.overridden && s.overridden.length) {
+      // The most confusing failure mode there is: the file is correct, but a
+      // stale value in the panel is winning. Name the keys explicitly.
+      lines.push(`    ignored (already set in the environment): ${s.overridden.join(', ')}`);
+    }
+  }
   return `Configuration loaded from:\n${lines.join('\n')}`;
 }
 
-module.exports = { load, describe, parse, PROJECT_ROOT };
+module.exports = { load, describe, parse, sourceOf, PROJECT_ROOT };
