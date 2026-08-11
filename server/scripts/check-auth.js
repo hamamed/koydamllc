@@ -11,7 +11,7 @@
 
 require('../lib/env').load();
 
-const { checkPassword, hashPassword } = require('../lib/auth');
+const { checkPassword, hashPassword, inspectHash } = require('../lib/auth');
 
 const candidate = process.argv[2];
 const problems = [];
@@ -60,22 +60,33 @@ if (!hash && !plain) {
 }
 
 if (hash) {
+  // Quotes, surrounding whitespace and internal line breaks are tolerated by
+  // the server, so report them as notes rather than problems.
   if (/^["']|["']$/.test(hash)) {
-    problems.push('ADMIN_PASSWORD_HASH is wrapped in quotes. Remove them — they become part of the value.');
+    warnings.push('ADMIN_PASSWORD_HASH is wrapped in quotes. Tolerated, but cleaner to remove them.');
   }
-  if (hash !== hash.trim()) {
-    problems.push('ADMIN_PASSWORD_HASH has surrounding whitespace or a line break.');
+  if (/\s/.test(hash.trim())) {
+    warnings.push('ADMIN_PASSWORD_HASH contains a space or line break inside the value. '
+      + 'Tolerated, but it suggests the field soft-wrapped when pasted.');
   }
-  const [salt, digest] = hash.trim().replace(/^["']|["']$/g, '').split(':');
-  if (!digest) {
-    problems.push('ADMIN_PASSWORD_HASH has no ":" separator — it should be "salt:hash".');
+
+  const info = inspectHash(hash);
+  const explain = {
+    empty: 'the variable is set but empty',
+    'no-separator': 'there is no ":" in the value',
+    'bad-salt': 'the part before ":" is not 32 characters',
+    'bad-digest': 'the part after ":" is not 64 characters (or 128 for a legacy hash)',
+    'not-hex': 'it contains characters outside 0-9 and a-f',
+  };
+
+  if (info.ok) {
+    const digestLen = info.hash.split(':')[1].length;
+    console.log(`  hash format          ok (${info.length} chars${digestLen === 128 ? ', legacy 64-byte digest' : ''})`);
   } else {
-    const ok = salt.length === 32 && digest.length === 128;
-    console.log(`  hash format          salt ${salt.length}/32, digest ${digest.length}/128 ${ok ? 'ok' : 'WRONG'}`);
-    if (!ok) {
-      problems.push('ADMIN_PASSWORD_HASH is the wrong length — it was probably truncated when pasted. '
-        + 'The full value is 161 characters.');
-    }
+    console.log(`  hash format          UNUSABLE — ${explain[info.problem] || info.problem}`);
+    problems.push(`ADMIN_PASSWORD_HASH is unusable: ${explain[info.problem] || info.problem}. `
+      + `The value stored is ${info.length} characters; a valid hash is 97. `
+      + 'Regenerate with: node server/scripts/hash-password.js "your password"');
   }
 }
 

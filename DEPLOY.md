@@ -162,8 +162,8 @@ not a crash. In order of likelihood:
    until the app is **restarted**. Check the app log: if you see the
    `ADMIN LOGIN IS DISABLED` banner at startup, nothing was configured, and the
    login screen will say so too (it returns 503 with an explanation, not 401).
-2. **The hash was truncated when pasted.** It is exactly **161 characters**
-   (32-char salt + `:` + 128-char hash). A short value is detected at boot and the
+2. **The hash was truncated when pasted.** It is exactly **97 characters**
+   (32-char salt + `:` + 64-char digest). A short value is detected at boot and the
    login screen reports it.
 3. **The password does not match the hash.** Regenerate:
    `node server/scripts/hash-password.js "your password"`.

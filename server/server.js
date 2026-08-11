@@ -233,8 +233,19 @@ app.post('/api/admin/login', rateLimit({ key: 'login', max: 8, windowMs: 10 * 60
       });
     }
     if (result.reason === 'hash-malformed') {
+      const { length = 0, problem = 'unknown' } = result.detail || {};
+      const why = {
+        empty: 'the variable is set but empty',
+        'no-separator': 'there is no ":" in the value',
+        'bad-salt': 'the part before ":" is not 32 characters',
+        'bad-digest': 'the part after ":" is not 64 characters',
+        'not-hex': 'it contains characters that are not 0-9 or a-f',
+      }[problem] || problem;
+
       return res.status(503).json({
-        error: 'ADMIN_PASSWORD_HASH is malformed — it was probably truncated or quoted when pasted. Re-enter the full 161-character value and restart.',
+        error: `ADMIN_PASSWORD_HASH is unusable — ${why}. The server received ${length} characters; `
+          + 'a valid hash is 97 (32-char salt, colon, 64-char digest). '
+          + 'Regenerate it, paste the whole value with no quotes, and restart.',
       });
     }
     return res.status(401).json({ error: 'Incorrect email or password.' });
