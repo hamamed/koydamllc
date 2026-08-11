@@ -134,10 +134,17 @@ function authenticate(email, password) {
 
   if (process.env.ADMIN_PASSWORD_HASH) {
     const info = inspectHash(process.env.ADMIN_PASSWORD_HASH);
-    if (!info.ok) return { ok: false, reason: 'hash-malformed', detail: info };
-    return checkPassword(password, info.hash)
-      ? { ok: true }
-      : { ok: false, reason: 'password-mismatch' };
+    if (info.ok) {
+      return checkPassword(password, info.hash)
+        ? { ok: true }
+        : { ok: false, reason: 'password-mismatch' };
+    }
+    // An unusable hash locks the owner out entirely. If a plaintext password is
+    // also configured, prefer it over failing: the intent is obvious, and being
+    // locked out of your own site is the worse outcome.
+    if (!process.env.ADMIN_PASSWORD) {
+      return { ok: false, reason: 'hash-malformed', detail: info };
+    }
   }
 
   const plain = process.env.ADMIN_PASSWORD;
@@ -175,8 +182,17 @@ function warnIfMisconfigured() {
       }
       console.warn('[auth] Regenerate with: node server/scripts/hash-password.js "your password"');
     }
-  } else if (process.env.NODE_ENV === 'production') {
-    console.warn('[auth] Using plaintext ADMIN_PASSWORD in production. Set ADMIN_PASSWORD_HASH instead.');
+  }
+
+  if (process.env.ADMIN_PASSWORD) {
+    const shadowed = process.env.ADMIN_PASSWORD_HASH && inspectHash(process.env.ADMIN_PASSWORD_HASH).ok;
+    if (shadowed) {
+      console.warn('[auth] Both ADMIN_PASSWORD_HASH and ADMIN_PASSWORD are set. '
+        + 'The hash wins — remove it if you meant to use the plaintext password.');
+    } else {
+      console.log('[auth] Using ADMIN_PASSWORD (plaintext). Anyone who can read your '
+        + 'hosting configuration can read this password.');
+    }
   }
 
   if (!process.env.SESSION_SECRET) {

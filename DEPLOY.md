@@ -141,7 +141,7 @@ exactly that file.
 NODE_ENV=production
 SESSION_SECRET=<64 random hex chars>
 ADMIN_EMAIL=hello@koydam.com
-ADMIN_PASSWORD_HASH=<output of server/scripts/hash-password.js>
+ADMIN_PASSWORD=<your admin password>
 SESSION_HOURS=12
 
 # Optional — contact form + invoice notifications
