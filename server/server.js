@@ -10,7 +10,8 @@
  * admin panel edits. No build step, no database server.
  */
 
-require('./lib/env').load();
+const envLoader = require('./lib/env');
+const ENV_SOURCES = envLoader.load();
 
 const express = require('express');
 const path = require('path');
@@ -745,5 +746,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Koydam server → http://localhost:${PORT}`);
   console.log(`Admin panel    → http://localhost:${PORT}/admin/`);
+  console.log(envLoader.describe(ENV_SOURCES));
   auth.warnIfMisconfigured();
 });

@@ -88,6 +88,55 @@ Add HTTPS with `certbot --nginx` (or let Caddy do it automatically).
 
 ## 3. Environment variables
 
+### Put the config OUTSIDE the deploy directory
+
+If your settings keep disappearing after a deploy, this is why: a git checkout or
+an SFTP re-upload rewrites the application directory, and anything inside it —
+including `.env` — goes with it. You then get logged out of your own admin panel
+with no obvious cause.
+
+Keep the config one level **above** the app:
+
+```
+/home/youruser/
+├── koydam.env          ← config lives here, deploys never touch it
+└── koydam/             ← the application directory, replaced on every deploy
+    ├── server/
+    └── public/
+```
+
+Create it once:
+
+```bash
+cd /home/youruser
+nano koydam.env         # paste the variables below
+chmod 600 koydam.env    # readable only by you
+```
+
+The server looks for configuration in this order, and **the first one to define a
+value wins**:
+
+1. Real environment variables (hPanel's panel, pm2, systemd, docker)
+2. `$KOYDAM_ENV_FILE` — an explicit path, if you set one
+3. `<app>/.env`
+4. `<app>/../koydam.env` ← the deploy-proof location
+
+At startup the server prints which file it actually read, so you can confirm it
+found the right one:
+
+```
+Configuration loaded from:
+  /home/youruser/koydam.env — 12 values, 12 applied
+```
+
+If it says `environment variables only (no config file found)`, nothing was
+loaded — and the `ADMIN LOGIN IS DISABLED` banner will follow.
+
+Anywhere else, use `KOYDAM_ENV_FILE=/path/to/your/config` and the server will read
+exactly that file.
+
+### The variables
+
 ```ini
 NODE_ENV=production
 SESSION_SECRET=<64 random hex chars>
