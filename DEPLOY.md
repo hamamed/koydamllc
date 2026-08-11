@@ -153,7 +153,40 @@ Cookies. If it isn't, `NODE_ENV` didn't reach the process.
 
 ---
 
-## 6. Known gaps to close before real traffic
+## 6. Admin login returns 401
+
+A 401 means the server ran and **rejected the credentials** — it is configuration,
+not a crash. In order of likelihood:
+
+1. **The variables never reached the process.** Saving them in hPanel does nothing
+   until the app is **restarted**. Check the app log: if you see the
+   `ADMIN LOGIN IS DISABLED` banner at startup, nothing was configured, and the
+   login screen will say so too (it returns 503 with an explanation, not 401).
+2. **The hash was truncated when pasted.** It is exactly **161 characters**
+   (32-char salt + `:` + 128-char hash). A short value is detected at boot and the
+   login screen reports it.
+3. **The password does not match the hash.** Regenerate:
+   `node server/scripts/hash-password.js "your password"`.
+4. **Email mismatch.** What you type must equal `ADMIN_EMAIL`. Case and surrounding
+   whitespace are ignored; a different address is not.
+
+Quotes around a value are tolerated — panels that store `"value"` literally will
+still work — but it is cleaner not to add them.
+
+Diagnose the whole configuration at once:
+
+```bash
+node server/scripts/check-auth.js "the password you are typing"
+```
+
+It reports every problem it can find and, when the password does not match, prints
+a correct replacement hash. It never prints your existing hash or password.
+
+Failed logins are logged server-side with the precise cause
+(`email-mismatch`, `password-mismatch`, `hash-malformed`, `not-configured`); the
+HTTP response stays vague so the endpoint cannot be used to enumerate addresses.
+
+## 7. Known gaps to close before real traffic
 
 - **Backups.** `content.json` is a single file with no history — see the backup
   suggestion in the README. At minimum, add a cron job:

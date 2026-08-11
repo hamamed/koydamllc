@@ -70,22 +70,77 @@ function checkPassword(password, stored) {
   return crypto.timingSafeEqual(Buffer.from(derived), Buffer.from(hash));
 }
 
-/** Verifies credentials against ADMIN_PASSWORD_HASH, or ADMIN_PASSWORD in dev. */
-function verifyCredentials(email, password) {
-  const adminEmail = (process.env.ADMIN_EMAIL || 'hello@koydam.com').toLowerCase();
-  if (String(email || '').toLowerCase() !== adminEmail) return false;
+/** True when the server has any admin credential configured at all. */
+function credentialsConfigured() {
+  return Boolean(process.env.ADMIN_PASSWORD_HASH || process.env.ADMIN_PASSWORD);
+}
 
-  const hash = process.env.ADMIN_PASSWORD_HASH;
-  if (hash) return checkPassword(password, hash);
+/**
+ * Authenticates an admin login.
+ *
+ * Returns { ok, reason } rather than a bare boolean so the caller can log
+ * precisely why a login failed. The reason is for the server log only — the
+ * HTTP response stays deliberately vague, except for `not-configured`, where
+ * there is no security to protect and the operator needs to be told.
+ */
+function authenticate(email, password) {
+  if (!credentialsConfigured()) return { ok: false, reason: 'not-configured' };
+
+  const configured = process.env.ADMIN_EMAIL || 'hello@koydam.com';
+  const adminEmail = configured.trim().replace(/^["']|["']$/g, '').toLowerCase();
+  const given = String(email || '').trim().toLowerCase();
+
+  if (given !== adminEmail) return { ok: false, reason: 'email-mismatch' };
+
+  // Panels and copy-paste routinely add quotes or a trailing newline.
+  const hash = (process.env.ADMIN_PASSWORD_HASH || '').trim().replace(/^["']|["']$/g, '');
+  if (hash) {
+    const [salt, digest] = hash.split(':');
+    if (!digest || salt.length !== 32 || digest.length !== 128) {
+      return { ok: false, reason: 'hash-malformed' };
+    }
+    return checkPassword(password, hash)
+      ? { ok: true }
+      : { ok: false, reason: 'password-mismatch' };
+  }
 
   const plain = process.env.ADMIN_PASSWORD;
-  if (!plain) return false;
-  if (process.env.NODE_ENV === 'production') {
-    console.warn('[auth] ADMIN_PASSWORD_HASH is not set — using plaintext ADMIN_PASSWORD in production.');
-  }
   const a = Buffer.from(String(password));
   const b = Buffer.from(plain);
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
+  const match = a.length === b.length && crypto.timingSafeEqual(a, b);
+  return match ? { ok: true } : { ok: false, reason: 'password-mismatch' };
+}
+
+/** Backwards-compatible boolean wrapper. */
+const verifyCredentials = (email, password) => authenticate(email, password).ok;
+
+/**
+ * Logged once at boot. A server with no credentials configured rejects every
+ * login attempt, and silently doing so is the hardest failure to diagnose.
+ */
+function warnIfMisconfigured() {
+  if (!credentialsConfigured()) {
+    console.warn('┌──────────────────────────────────────────────────────────────┐');
+    console.warn('│  ADMIN LOGIN IS DISABLED                                     │');
+    console.warn('│  Neither ADMIN_PASSWORD_HASH nor ADMIN_PASSWORD is set, so   │');
+    console.warn('│  every login attempt will fail. Set ADMIN_PASSWORD_HASH in   │');
+    console.warn('│  your environment, then restart. Generate one with:          │');
+    console.warn('│    node server/scripts/hash-password.js "your password"      │');
+    console.warn('└──────────────────────────────────────────────────────────────┘');
+  } else if (process.env.ADMIN_PASSWORD_HASH) {
+    const hash = process.env.ADMIN_PASSWORD_HASH.trim().replace(/^["']|["']$/g, '');
+    const [salt, digest] = hash.split(':');
+    if (!digest || salt.length !== 32 || digest.length !== 128) {
+      console.warn(`[auth] ADMIN_PASSWORD_HASH looks malformed (${hash.length} chars, expected 161).`);
+      console.warn('[auth] It was probably truncated or quoted when pasted. Login will always fail.');
+    }
+  } else if (process.env.NODE_ENV === 'production') {
+    console.warn('[auth] Using plaintext ADMIN_PASSWORD in production. Set ADMIN_PASSWORD_HASH instead.');
+  }
+
+  if (!process.env.SESSION_SECRET) {
+    console.warn('[auth] SESSION_SECRET is not set — sessions will not survive a restart.');
+  }
 }
 
 /** Express middleware: 401s API calls, redirects page requests to /admin/login. */
@@ -105,4 +160,5 @@ function requireAuth(req, res, next) {
 module.exports = {
   COOKIE, issueToken, verifyToken, parseCookies, setSessionCookie,
   clearSessionCookie, hashPassword, checkPassword, verifyCredentials, requireAuth,
+  authenticate, credentialsConfigured, warnIfMisconfigured,
 };

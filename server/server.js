@@ -217,9 +217,29 @@ async function sendNotification(inquiry) {
 
 app.post('/api/admin/login', rateLimit({ key: 'login', max: 8, windowMs: 10 * 60 * 1000 }), (req, res) => {
   const { email, password } = req.body || {};
-  if (!auth.verifyCredentials(email, password)) {
+  const result = auth.authenticate(email, password);
+
+  if (!result.ok) {
+    // Log the precise cause; the response stays vague so it cannot be used to
+    // enumerate valid emails.
+    console.warn(`[auth] login failed from ${req.ip}: ${result.reason}`);
+
+    // The two exceptions: with nothing configured, or a hash that cannot
+    // possibly match, nobody can log in at all — so there is no security to
+    // preserve, and the operator needs to be told what is wrong.
+    if (result.reason === 'not-configured') {
+      return res.status(503).json({
+        error: 'Admin login is not configured on this server. Set ADMIN_PASSWORD_HASH in the environment and restart.',
+      });
+    }
+    if (result.reason === 'hash-malformed') {
+      return res.status(503).json({
+        error: 'ADMIN_PASSWORD_HASH is malformed — it was probably truncated or quoted when pasted. Re-enter the full 161-character value and restart.',
+      });
+    }
     return res.status(401).json({ error: 'Incorrect email or password.' });
   }
+
   auth.setSessionCookie(res, auth.issueToken(String(email).toLowerCase()));
   res.json({ ok: true });
 });
@@ -714,4 +734,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Koydam server → http://localhost:${PORT}`);
   console.log(`Admin panel    → http://localhost:${PORT}/admin/`);
+  auth.warnIfMisconfigured();
 });
