@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /uploads/tmp/
+
+Sitemap: https://koydam.com/sitemap.xml

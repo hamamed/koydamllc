@@ -1,0 +1,21 @@
+{
+  "name": "koydam-agency",
+  "version": "1.0.0",
+  "description": "Koydam LLC — agency website (public site + admin panel). Express API + static Bootstrap 5 front-end.",
+  "type": "commonjs",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^6.9.16"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

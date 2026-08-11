@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice — Koydam LLC</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" type="image/png" href="/logo/koydam.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/koydam.css" rel="stylesheet">
+  <link href="/admin/css/invoice.css" rel="stylesheet">
+</head>
+
+<body class="iv-body">
+
+<!-- Screen-only toolbar; hidden when printing -->
+<div class="iv-toolbar no-print">
+  <a class="btn btn-kd-ghost btn-sm" href="/admin/#/invoices">
+    <i data-lucide="arrow-left"></i> Archive
+  </a>
+  <span class="kd-faint small" id="ivToolbarLabel">Invoice</span>
+  <div class="ms-auto d-flex gap-2">
+    <a class="btn btn-kd-outline btn-sm" id="ivEditLink"><i data-lucide="pencil"></i> Edit</a>
+    <button class="btn btn-kd btn-sm" onclick="window.print()">
+      <i data-lucide="printer"></i> Print / Save as PDF
+    </button>
+  </div>
+</div>
+
+<!-- Loading / error states -->
+<p class="iv-state" id="ivLoading">Loading invoice…</p>
+<p class="iv-state d-none" id="ivError">That invoice could not be found.</p>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     THE DOCUMENT — one printed page, filled by js/invoice-print.js
+     ══════════════════════════════════════════════════════════════════ -->
+<article class="iv-sheet d-none" id="ivSheet">
+
+  <!-- Watermark for non-final states (draft / cancelled) -->
+  <div class="iv-watermark d-none" id="ivWatermark"></div>
+
+  <!-- ---- Header: issuer ---- -->
+  <header class="iv-head">
+    <div class="iv-issuer">
+      <img class="iv-logo" id="ivLogo" src="/logo/logoText.png" alt="">
+      <address class="iv-address" id="ivIssuer"></address>
+    </div>
+
+    <div class="iv-meta">
+      <h1 class="iv-title">Invoice</h1>
+      <dl class="iv-meta-list" id="ivMeta"></dl>
+    </div>
+  </header>
+
+  <!-- ---- Bill to ---- -->
+  <section class="iv-parties">
+    <div>
+      <h2 class="iv-label">Billed to</h2>
+      <address class="iv-address" id="ivClient"></address>
+    </div>
+    <div class="iv-amount-due">
+      <h2 class="iv-label">Amount due</h2>
+      <p class="iv-amount" id="ivAmountDue">—</p>
+      <p class="iv-amount-sub" id="ivDueNote"></p>
+    </div>
+  </section>
+
+  <!-- ---- Line items ---- -->
+  <table class="iv-table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="num">Qty</th>
+        <th class="num">Unit price</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody id="ivItems"></tbody>
+  </table>
+
+  <!-- ---- Totals ---- -->
+  <section class="iv-totals">
+    <dl id="ivTotals"></dl>
+  </section>
+
+  <!-- ---- Notes / payment ---- -->
+  <section class="iv-notes">
+    <div class="iv-note-block d-none" id="ivNotesBlock">
+      <h2 class="iv-label">Notes</h2>
+      <p id="ivNotes"></p>
+    </div>
+    <div class="iv-note-block d-none" id="ivTermsBlock">
+      <h2 class="iv-label">Payment terms</h2>
+      <p id="ivTerms"></p>
+    </div>
+    <div class="iv-note-block d-none" id="ivBankBlock">
+      <h2 class="iv-label">Payment details</h2>
+      <p id="ivBank"></p>
+    </div>
+  </section>
+
+  <footer class="iv-foot">
+    <p id="ivFooterNote"></p>
+    <p class="iv-foot-legal" id="ivFooterLegal"></p>
+  </footer>
+
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js" defer></script>
+<script src="/admin/js/invoice-print.js" defer></script>
+</body>
+</html>

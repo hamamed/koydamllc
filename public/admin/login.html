@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — Koydam Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="/logo/koydam.png">
+  <link rel="apple-touch-icon" href="/logo/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/koydam.css" rel="stylesheet">
+  <link href="/admin/css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+<main class="ad-login">
+  <div class="ad-login-card">
+
+    <!-- Full lockup: glyph + KOYDAM wordmark -->
+    <div class="mb-4">
+      <img class="kd-lockup mb-2" src="/logo/logoText.png" alt="Koydam LLC" width="89" height="64">
+      <small class="kd-faint d-block" style="letter-spacing:.1em;text-transform:uppercase;font-size:.66rem">Admin</small>
+    </div>
+
+    <h1 class="kd-h3 mb-1">Sign in</h1>
+    <p class="kd-muted small mb-4">Manage apps, pages, settings and enquiries.</p>
+
+    <form id="kdLoginForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="loginEmail">Email</label>
+        <input class="form-control" id="loginEmail" name="email" type="email"
+               autocomplete="username" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="loginPassword">Password</label>
+        <input class="form-control" id="loginPassword" name="password" type="password"
+               autocomplete="current-password" required>
+      </div>
+      <div id="kdLoginError" class="mb-3 d-none"></div>
+      <button class="btn btn-kd w-100" type="submit"><i data-lucide="log-in"></i> Sign in</button>
+    </form>
+
+    <p class="kd-faint small text-center mt-4 mb-0">
+      <a class="kd-muted" href="/"><i data-lucide="arrow-left" style="width:13px;height:13px"></i> Back to website</a>
+    </p>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js" defer></script>
+<script src="/js/koydam.js" defer></script>
+</body>
+</html>

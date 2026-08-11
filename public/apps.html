@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Works — Apps &amp; Software by Koydam LLC</title>
+  <meta name="description" content="Applications and software built by Koydam LLC — iOS, Android, web platforms and SaaS products.">
+  <link rel="canonical" href="https://koydam.com/apps.html">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="icon" type="image/png" href="/logo/koydam.png">
+  <link rel="apple-touch-icon" href="/logo/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/koydam.css" rel="stylesheet">
+</head>
+
+<body>
+<a href="#main" class="visually-hidden-focusable btn btn-kd position-absolute m-3">Skip to content</a>
+
+<header class="kd-navbar sticky-top">
+  <nav class="navbar navbar-expand-lg py-2" aria-label="Primary">
+    <div class="container kd-container">
+      <a class="navbar-brand" href="/">
+        <img class="kd-brand-mark" src="/logo/logo.png" alt="Koydam LLC" width="28" height="32">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#kdNav"
+              aria-controls="kdNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="kdNav">
+        <ul class="navbar-nav mx-lg-auto gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="/apps.html">Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+          <button class="btn btn-kd-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#kdLoginModal">
+            <i data-lucide="lock"></i> Client portal
+          </button>
+          <a class="btn btn-kd btn-sm" href="/contact.html">Start a project</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       PAGE HEAD + FILTERS
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kd-section-tight kd-rule-b">
+    <div class="container kd-container">
+
+      <p class="kd-eyebrow mb-3">Works</p>
+      <h1 class="kd-h2 mb-3">Apps and software we've built.</h1>
+      <p class="kd-lead mb-5">
+        Consumer utilities, business platforms, and internal tools — designed,
+        engineered, and maintained in-house.
+      </p>
+
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+
+        <!-- Platform filter. data-filter values map to app.platforms[] -->
+        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Filter by platform">
+          <button class="kd-filter is-active" data-filter="all">All</button>
+          <button class="kd-filter" data-filter="ios"><i data-lucide="apple"></i> iOS</button>
+          <button class="kd-filter" data-filter="android"><i data-lucide="bot"></i> Android</button>
+          <button class="kd-filter" data-filter="web"><i data-lucide="globe"></i> Web</button>
+          <button class="kd-filter" data-filter="saas"><i data-lucide="cloud"></i> SaaS</button>
+        </div>
+
+        <!-- Client-side search over title / tagline / category -->
+        <div class="position-relative" style="min-width:min(280px, 100%)">
+          <label class="visually-hidden" for="kdSearch">Search works</label>
+          <input class="form-control ps-5" id="kdSearch" type="search" placeholder="Search works…" autocomplete="off">
+          <i data-lucide="search" class="position-absolute kd-faint"
+             style="left:.95rem; top:50%; transform:translateY(-50%)"></i>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       GRID
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kd-section-tight">
+    <div class="container kd-container">
+
+      <p class="kd-faint small mb-4" id="kdCount" aria-live="polite"></p>
+
+      <div class="row g-3 g-lg-4" id="kdGrid">
+        <div class="col-12 col-md-6 col-lg-4"><div class="kd-skeleton" style="height:250px"></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="kd-skeleton" style="height:250px"></div></div>
+        <div class="col-12 col-md-6 col-lg-4"><div class="kd-skeleton" style="height:250px"></div></div>
+      </div>
+
+      <!-- Shown when a filter/search matches nothing -->
+      <div class="kd-card p-5 text-center d-none" id="kdEmpty">
+        <i data-lucide="search-x" class="kd-faint mx-auto" style="width:30px;height:30px"></i>
+        <h2 class="kd-h3 mt-3 mb-2">Nothing matches that filter</h2>
+        <p class="kd-muted mb-4">Try another platform, or clear your search.</p>
+        <div><button class="btn btn-kd-outline btn-sm" id="kdReset">Reset filters</button></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       CTA
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kd-section kd-surface kd-rule-t">
+    <div class="container kd-container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <h2 class="kd-h2 mb-2">Have something like this in mind?</h2>
+          <p class="kd-lead mb-0">Tell us the shape of it and we'll come back with scope, timeline and cost.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a class="btn btn-kd-accent btn-lg" href="/contact.html">Start a project <i data-lucide="arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="kd-footer">
+  <div class="container kd-container py-5">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-4">
+        <a class="navbar-brand d-inline-flex mb-3" href="/">
+          <img class="kd-brand-mark" src="/logo/logo.png" alt="Koydam LLC" width="28" height="32">
+        </a>
+        <p class="kd-muted small mb-4" style="max-width:34ch" data-kd="company.tagline">
+          Full-cycle software development studio.
+        </p>
+        <div class="d-flex gap-2">
+          <a class="kd-social" data-kd-social="x" href="#" aria-label="X"><i data-lucide="twitter"></i></a>
+          <a class="kd-social" data-kd-social="linkedin" href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+          <a class="kd-social" data-kd-social="github" href="#" aria-label="GitHub"><i data-lucide="github"></i></a>
+          <a class="kd-social" data-kd-social="instagram" href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Company</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/apps.html">Works</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Legal</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="/privacy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6>Get in touch</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="mailto:hello@koydam.com" data-kd="company.email" data-kd-href="mailto">hello@koydam.com</a></li>
+          <li data-kd-wrap><a href="tel:" data-kd="company.phone" data-kd-href="tel" data-kd-hide-empty></a></li>
+          <li class="kd-muted small" data-kd="company.address">Sheridan, WY, United States</li>
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-4 mt-4 kd-rule-t">
+      <p class="kd-faint small mb-0" data-kd="company.copyright">© Koydam LLC. All rights reserved.</p>
+      <p class="kd-faint small mb-0">Registered in the United States</p>
+    </div>
+  </div>
+</footer>
+<div class="modal fade" id="kdLoginModal" tabindex="-1" aria-labelledby="kdLoginTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border:1px solid var(--kd-line); border-radius:var(--kd-radius-lg)">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h2 class="kd-h3 mb-1" id="kdLoginTitle">Client portal</h2>
+          <p class="kd-muted small mb-0">Sign in to manage site content.</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-4">
+        <form id="kdLoginForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="loginEmail">Email</label>
+            <input class="form-control" id="loginEmail" name="email" type="email" autocomplete="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input class="form-control" id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <div id="kdLoginError" class="mb-3 d-none"></div>
+          <button class="btn btn-kd w-100" type="submit"><i data-lucide="log-in"></i> Sign in</button>
+        </form>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <p class="kd-faint small mb-0">Not a client yet? <a href="/contact.html">Start a project</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js" defer></script>
+<script src="/js/koydam.js" defer></script>
+<script src="/js/apps.js" defer></script>
+</body>
+</html>

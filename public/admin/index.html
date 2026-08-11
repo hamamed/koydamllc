@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — Koydam Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="icon" type="image/png" href="/logo/koydam.png">
+  <link rel="apple-touch-icon" href="/logo/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/koydam.css" rel="stylesheet">
+  <link href="/admin/css/admin.css" rel="stylesheet">
+</head>
+
+<body class="ad-body">
+<div class="ad-shell">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       SIDEBAR
+       ══════════════════════════════════════════════════════════════════ -->
+  <aside class="ad-sidebar" id="adSidebar">
+
+    <a class="ad-brand" href="/admin/#/overview">
+      <img class="kd-brand-mark" src="/logo/logo.png" alt="" width="23" height="26">
+      <span>Koydam<small>Admin panel</small></span>
+    </a>
+
+    <nav class="ad-nav" aria-label="Admin sections">
+      <p class="ad-nav-label">Overview</p>
+      <a class="ad-nav-link" href="#/overview" data-route="overview">
+        <i data-lucide="layout-dashboard"></i> Dashboard
+      </a>
+
+      <p class="ad-nav-label">Content</p>
+      <a class="ad-nav-link" href="#/apps" data-route="apps">
+        <i data-lucide="grid-2x2"></i> Apps manager
+        <span class="ad-badge" id="adAppsBadge">0</span>
+      </a>
+      <a class="ad-nav-link" href="#/pages" data-route="pages">
+        <i data-lucide="file-text"></i> Pages &amp; legal
+      </a>
+      <a class="ad-nav-link" href="#/home" data-route="home">
+        <i data-lucide="home"></i> Landing page
+      </a>
+
+      <p class="ad-nav-label">Business</p>
+      <a class="ad-nav-link" href="#/inquiries" data-route="inquiries">
+        <i data-lucide="inbox"></i> Inquiries
+        <span class="ad-badge" id="adInboxBadge">0</span>
+      </a>
+      <a class="ad-nav-link" href="#/invoices" data-route="invoices">
+        <i data-lucide="receipt"></i> Invoices
+        <span class="ad-badge" id="adInvoiceBadge">0</span>
+      </a>
+      <a class="ad-nav-link" href="#/settings" data-route="settings">
+        <i data-lucide="settings"></i> Company settings
+      </a>
+    </nav>
+
+    <div class="ad-sidebar-foot">
+      <a class="ad-nav-link" href="/" target="_blank" rel="noopener">
+        <i data-lucide="external-link"></i> View website
+      </a>
+      <button class="ad-nav-link w-100 border-0 bg-transparent text-start" id="adLogout">
+        <i data-lucide="log-out"></i> Sign out
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       MAIN
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="ad-main">
+
+    <header class="ad-topbar">
+      <button class="btn btn-kd-ghost btn-sm d-lg-none" id="adMenuToggle" aria-label="Open menu">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <h1 class="ad-page-title" id="adTitle">Dashboard</h1>
+
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <span class="kd-tag d-none d-sm-inline-flex">
+          <i data-lucide="user"></i><span id="adUser">—</span>
+        </span>
+        <a class="btn btn-kd btn-sm" href="#/apps/new"><i data-lucide="plus"></i> New app</a>
+      </div>
+    </header>
+
+    <div class="ad-content">
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · DASHBOARD
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-overview">
+
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Published apps</span><i data-lucide="check-circle-2"></i></div>
+              <div class="ad-kpi-value" id="kpiPublished">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Drafts</span><i data-lucide="pencil-line"></i></div>
+              <div class="ad-kpi-value" id="kpiDrafts">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">New inquiries</span><i data-lucide="mail"></i></div>
+              <div class="ad-kpi-value" id="kpiUnread">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Total inquiries</span><i data-lucide="inbox"></i></div>
+              <div class="ad-kpi-value" id="kpiInquiries">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <div class="ad-card">
+              <div class="ad-card-head">
+                <h2>Recent inquiries</h2>
+                <a class="kd-arrow-link small" href="#/inquiries">View all <i data-lucide="arrow-right"></i></a>
+              </div>
+              <div class="ad-table-wrap">
+                <table class="ad-table">
+                  <thead><tr><th>From</th><th>Subject</th><th>Received</th></tr></thead>
+                  <tbody id="adRecentInquiries"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="ad-card mb-3">
+              <div class="ad-card-head"><h2>Quick actions</h2></div>
+              <div class="ad-card-body d-grid gap-2">
+                <a class="btn btn-kd-outline justify-content-start" href="#/apps/new"><i data-lucide="plus"></i> Add a new app</a>
+                <a class="btn btn-kd-outline justify-content-start" href="#/pages"><i data-lucide="file-text"></i> Edit legal pages</a>
+                <a class="btn btn-kd-outline justify-content-start" href="#/settings"><i data-lucide="building-2"></i> Update company details</a>
+              </div>
+            </div>
+
+            <div class="ad-card">
+              <div class="ad-card-head"><h2>Recently updated apps</h2></div>
+              <div class="ad-card-body p-0">
+                <div id="adRecentApps"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · APPS MANAGER (list)
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-apps">
+        <div class="ad-card">
+
+          <div class="ad-card-head">
+            <h2>All apps</h2>
+            <div class="d-flex gap-2">
+              <select class="form-select form-select-sm" id="adAppsStatusFilter" style="width:auto">
+                <option value="all">All statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+              <a class="btn btn-kd btn-sm" href="#/apps/new"><i data-lucide="plus"></i> New app</a>
+            </div>
+          </div>
+
+          <div class="ad-table-wrap">
+            <table class="ad-table">
+              <thead>
+                <tr>
+                  <th style="width:38%">App</th>
+                  <th>Platforms</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adAppsTable"></tbody>
+            </table>
+          </div>
+
+          <div class="ad-empty d-none" id="adAppsEmpty">
+            <i data-lucide="package-open"></i>
+            <p class="mt-3 mb-3">No apps yet.</p>
+            <a class="btn btn-kd btn-sm" href="#/apps/new">Create the first one</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · APP EDITOR (create / update)
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-app-editor">
+        <form id="adAppForm" novalidate>
+          <div class="row g-3">
+
+            <!-- ---------- Left column: content ---------- -->
+            <div class="col-lg-8">
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Basics</h2></div>
+                <div class="ad-card-body">
+
+                  <div class="row g-3">
+                    <div class="col-md-7">
+                      <label class="form-label" for="fTitle">Title <span class="text-danger">*</span></label>
+                      <input class="form-control" id="fTitle" name="title" required>
+                      <div class="invalid-feedback">A title is required.</div>
+                    </div>
+
+                    <div class="col-md-5">
+                      <label class="form-label" for="fSlug">Slug</label>
+                      <div class="input-group">
+                        <span class="input-group-text kd-faint small">/app/</span>
+                        <input class="form-control" id="fSlug" name="slug" placeholder="auto">
+                      </div>
+                      <div class="form-text">Leave blank to generate from the title.</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="fTagline">Short tagline</label>
+                      <input class="form-control" id="fTagline" name="tagline" maxlength="200"
+                             placeholder="One line shown on cards and search results">
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label" for="fDescription">Full description</label>
+                      <div class="ad-toolbar" data-editor-toolbar="fDescription">
+                        <button type="button" data-wrap="h2" title="Heading">H2</button>
+                        <button type="button" data-wrap="p" title="Paragraph">P</button>
+                        <button type="button" data-wrap="strong" title="Bold"><strong>B</strong></button>
+                        <button type="button" data-wrap="em" title="Italic"><em>I</em></button>
+                        <button type="button" data-wrap="ul" title="Bullet list">List</button>
+                        <button type="button" data-wrap="a" title="Link">Link</button>
+                        <button type="button" class="ms-auto" data-preview="fDescription">Preview</button>
+                      </div>
+                      <textarea class="form-control ad-editor" id="fDescription" name="description" rows="12"
+                                placeholder="<p>What the product does, who it is for, and how it was built.</p>"></textarea>
+                      <div class="form-text">HTML is allowed. Use the toolbar or write markup directly.</div>
+                      <div class="ad-preview kd-prose mt-2 d-none" id="fDescriptionPreview"></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Key features (repeatable) -->
+              <div class="ad-card mb-3">
+                <div class="ad-card-head">
+                  <h2>Key features</h2>
+                  <button class="btn btn-kd-outline btn-sm" type="button" data-repeat-add="adFeatures">
+                    <i data-lucide="plus"></i> Add feature
+                  </button>
+                </div>
+                <div class="ad-card-body">
+                  <div id="adFeatures"></div>
+                  <p class="form-text mb-0">Shown as a checklist on the app detail page.</p>
+                </div>
+              </div>
+
+              <!-- Media -->
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Media</h2></div>
+                <div class="ad-card-body">
+
+                  <p class="ad-section-label">App icon</p>
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <div id="adIconPreview"></div>
+                    <div class="flex-grow-1">
+                      <input class="form-control mb-2" id="fIcon" name="icon" placeholder="/uploads/icon.png or https://…">
+                      <label class="ad-drop d-block mb-0">
+                        <i data-lucide="upload"></i> Upload icon (PNG, SVG or WebP · max 8 MB)
+                        <input type="file" class="d-none" id="fIconUpload" accept="image/*">
+                      </label>
+                    </div>
+                  </div>
+
+                  <p class="ad-section-label">Screenshots</p>
+                  <div class="d-flex flex-wrap gap-2 mb-3" id="adShots"></div>
+                  <label class="ad-drop d-block" id="adShotsDrop">
+                    <i data-lucide="images"></i> Drop screenshots here, or click to choose (up to 12)
+                    <input type="file" class="d-none" id="fShotsUpload" accept="image/*" multiple>
+                  </label>
+
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ---------- Right column: meta ---------- -->
+            <div class="col-lg-4">
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Publishing</h2></div>
+                <div class="ad-card-body">
+
+                  <label class="form-label" for="fStatus">Status</label>
+                  <select class="form-select mb-3" id="fStatus" name="status">
+                    <option value="draft">Draft — not visible</option>
+                    <option value="published">Published — live on the site</option>
+                    <option value="archived">Archived — hidden, kept on record</option>
+                  </select>
+
+                  <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="fFeatured" name="featured">
+                    <label class="form-check-label small" for="fFeatured">Feature on the landing page</label>
+                  </div>
+
+                  <label class="form-label" for="fOrder">Display order</label>
+                  <input class="form-control" id="fOrder" name="order" type="number" min="1" step="1">
+                  <div class="form-text">Lower numbers appear first.</div>
+
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Platforms</h2></div>
+                <div class="ad-card-body">
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="pIos" value="ios"><label class="form-check-label" for="pIos">iOS</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="pAndroid" value="android"><label class="form-check-label" for="pAndroid">Android</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="pWeb" value="web"><label class="form-check-label" for="pWeb">Web</label></div>
+                  <div class="form-check"><input class="form-check-input" type="checkbox" id="pSaas" value="saas"><label class="form-check-label" for="pSaas">SaaS</label></div>
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Store &amp; links</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="fAppStore"><i data-lucide="apple"></i> App Store URL</label>
+                    <input class="form-control" id="fAppStore" name="appStoreUrl" type="url" placeholder="https://apps.apple.com/…">
+                  </div>
+                  <div>
+                    <label class="form-label" for="fPlayStore"><i data-lucide="play"></i> Google Play URL</label>
+                    <input class="form-control" id="fPlayStore" name="playStoreUrl" type="url" placeholder="https://play.google.com/…">
+                  </div>
+                  <div>
+                    <label class="form-label" for="fWebUrl"><i data-lucide="globe"></i> Web URL</label>
+                    <input class="form-control" id="fWebUrl" name="webUrl" type="url" placeholder="https://…">
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Metadata</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="fCategory">Category</label>
+                    <input class="form-control" id="fCategory" name="category" list="adCategories" placeholder="Utilities">
+                    <datalist id="adCategories">
+                      <option>Utilities</option><option>Business</option><option>Productivity</option>
+                      <option>Social</option><option>Finance</option><option>Health</option><option>Games</option>
+                    </datalist>
+                  </div>
+                  <div>
+                    <label class="form-label" for="fVersion">Version</label>
+                    <input class="form-control" id="fVersion" name="version" placeholder="1.0.0">
+                  </div>
+                  <div>
+                    <label class="form-label" for="fReleaseDate">Release date</label>
+                    <input class="form-control" id="fReleaseDate" name="releaseDate" type="date">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ---------- Actions ---------- -->
+            <div class="col-12">
+              <div class="ad-card">
+                <div class="ad-card-body d-flex flex-wrap align-items-center gap-2">
+                  <button class="btn btn-kd-accent" type="submit"><i data-lucide="save"></i> Save app</button>
+                  <a class="btn btn-kd-outline" href="#/apps">Cancel</a>
+                  <a class="btn btn-kd-ghost d-none" id="adViewLive" target="_blank" rel="noopener">
+                    <i data-lucide="external-link"></i> View live
+                  </a>
+                  <button class="btn btn-kd-ghost text-danger ms-auto d-none" type="button" id="adDeleteApp">
+                    <i data-lucide="trash-2"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · PAGES & LEGAL
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-pages">
+        <div class="ad-card">
+
+          <div class="ad-card-head">
+            <ul class="nav nav-pills gap-1" role="tablist">
+              <li class="nav-item"><button class="btn btn-kd-ghost btn-sm is-active" data-page-tab="privacy">Privacy Policy</button></li>
+              <li class="nav-item"><button class="btn btn-kd-ghost btn-sm" data-page-tab="terms">Terms of Service</button></li>
+            </ul>
+            <button class="btn btn-kd-accent btn-sm" id="adSavePage"><i data-lucide="save"></i> Save page</button>
+          </div>
+
+          <div class="ad-card-body">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label" for="pgTitle">Page title</label>
+                <input class="form-control" id="pgTitle">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="pgUpdated">Last updated</label>
+                <input class="form-control" id="pgUpdated" type="date">
+              </div>
+
+              <div class="col-12">
+                <label class="form-label" for="pgBody">Content</label>
+                <div class="ad-toolbar" data-editor-toolbar="pgBody">
+                  <button type="button" data-wrap="h2">H2</button>
+                  <button type="button" data-wrap="p">P</button>
+                  <button type="button" data-wrap="strong"><strong>B</strong></button>
+                  <button type="button" data-wrap="em"><em>I</em></button>
+                  <button type="button" data-wrap="ul">List</button>
+                  <button type="button" data-wrap="a">Link</button>
+                  <button type="button" class="ms-auto" data-preview="pgBody">Preview</button>
+                </div>
+                <textarea class="form-control ad-editor" id="pgBody" rows="20"></textarea>
+                <div class="form-text">
+                  Rendered on the public page inside <code>.kd-prose</code>. Headings become numbered sections.
+                </div>
+                <div class="ad-preview kd-prose mt-2 d-none" id="pgBodyPreview"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · LANDING PAGE CONTENT
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-home">
+        <form id="adHomeForm">
+          <div class="row g-3">
+
+            <div class="col-lg-7">
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Hero</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="hEyebrow">Eyebrow</label>
+                    <input class="form-control" id="hEyebrow" name="eyebrow">
+                  </div>
+                  <div>
+                    <label class="form-label" for="hTitle">Headline</label>
+                    <input class="form-control" id="hTitle" name="heroTitle">
+                  </div>
+                  <div>
+                    <label class="form-label" for="hSubtitle">Sub-headline</label>
+                    <textarea class="form-control" id="hSubtitle" name="heroSubtitle" rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-head"><h2>About block</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="hAboutTitle">Title</label>
+                    <input class="form-control" id="hAboutTitle" name="aboutTitle">
+                  </div>
+                  <div>
+                    <label class="form-label" for="hAboutBody">Body</label>
+                    <textarea class="form-control" id="hAboutBody" name="aboutBody" rows="4"></textarea>
+                  </div>
+                  <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <label class="form-label mb-0">Bullet points</label>
+                      <button class="btn btn-kd-outline btn-sm" type="button" data-repeat-add="adAboutPoints">
+                        <i data-lucide="plus"></i> Add
+                      </button>
+                    </div>
+                    <div id="adAboutPoints"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-5">
+              <div class="ad-card mb-3">
+                <div class="ad-card-head">
+                  <h2>Stats strip</h2>
+                  <button class="btn btn-kd-outline btn-sm" type="button" id="adAddStat"><i data-lucide="plus"></i> Add</button>
+                </div>
+                <div class="ad-card-body"><div id="adStats"></div></div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head">
+                  <h2>Services</h2>
+                  <button class="btn btn-kd-outline btn-sm" type="button" id="adAddService"><i data-lucide="plus"></i> Add</button>
+                </div>
+                <div class="ad-card-body"><div id="adServices"></div></div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-body">
+                  <button class="btn btn-kd-accent w-100" type="submit"><i data-lucide="save"></i> Save landing page</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · INQUIRIES
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-inquiries">
+        <div class="ad-card">
+
+          <div class="ad-card-head">
+            <h2>Contact submissions</h2>
+            <div class="d-flex gap-2">
+              <select class="form-select form-select-sm" id="adInboxFilter" style="width:auto">
+                <option value="inbox">Inbox</option>
+                <option value="unread">Unread</option>
+                <option value="archived">Archived</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ad-table-wrap">
+            <table class="ad-table">
+              <thead>
+                <tr>
+                  <th style="width:22%">From</th>
+                  <th style="width:20%">Subject</th>
+                  <th>Message</th>
+                  <th style="width:14%">Received</th>
+                  <th class="text-end" style="width:12%">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adInboxTable"></tbody>
+            </table>
+          </div>
+
+          <div class="ad-empty d-none" id="adInboxEmpty">
+            <i data-lucide="inbox"></i>
+            <p class="mt-3 mb-0">Nothing here yet.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · INVOICES (archive list)
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-invoices">
+
+        <div class="row g-3 mb-3">
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Outstanding</span><i data-lucide="hourglass"></i></div>
+              <div class="ad-kpi-value" id="kpiOutstanding">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Paid this year</span><i data-lucide="check-circle-2"></i></div>
+              <div class="ad-kpi-value" id="kpiPaidYear">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Overdue</span><i data-lucide="alert-triangle"></i></div>
+              <div class="ad-kpi-value" id="kpiOverdue">0</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="ad-card ad-kpi">
+              <div class="d-flex justify-content-between mb-2"><span class="ad-kpi-label">Total issued</span><i data-lucide="receipt"></i></div>
+              <div class="ad-kpi-value" id="kpiInvoiceCount">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ad-card">
+          <div class="ad-card-head">
+            <h2>Invoice archive</h2>
+            <div class="d-flex gap-2">
+              <input class="form-control form-control-sm" id="adInvoiceSearch" type="search"
+                     placeholder="Search number or client…" style="width:auto">
+              <select class="form-select form-select-sm" id="adInvoiceFilter" style="width:auto">
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+                <option value="sent">Sent</option>
+                <option value="paid">Paid</option>
+                <option value="overdue">Overdue</option>
+                <option value="archived">Archived</option>
+                <option value="all">All</option>
+              </select>
+              <a class="btn btn-kd btn-sm" href="#/invoices/new"><i data-lucide="plus"></i> New invoice</a>
+            </div>
+          </div>
+
+          <div class="ad-table-wrap">
+            <table class="ad-table">
+              <thead>
+                <tr>
+                  <th style="width:14%">Number</th>
+                  <th style="width:26%">Client</th>
+                  <th>Issued</th>
+                  <th>Due</th>
+                  <th class="text-end">Total</th>
+                  <th>Status</th>
+                  <th class="text-end" style="width:15%">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adInvoiceTable"></tbody>
+            </table>
+          </div>
+
+          <div class="ad-empty d-none" id="adInvoiceEmpty">
+            <i data-lucide="receipt"></i>
+            <p class="mt-3 mb-3">No invoices here yet.</p>
+            <a class="btn btn-kd btn-sm" href="#/invoices/new">Create the first one</a>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · INVOICE EDITOR (create / update)
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-invoice-editor">
+        <form id="adInvoiceForm" novalidate>
+          <div class="row g-3">
+
+            <!-- ---------- Left: client + line items ---------- -->
+            <div class="col-lg-8">
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head">
+                  <h2>Bill to</h2>
+                  <button class="btn btn-kd-ghost btn-sm" type="button" id="adCopyClient" title="Reuse a previous client">
+                    <i data-lucide="users"></i> Previous client
+                  </button>
+                </div>
+                <div class="ad-card-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label" for="ivName">Contact name <span class="text-danger">*</span></label>
+                      <input class="form-control" id="ivName" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="ivCompany">Company</label>
+                      <input class="form-control" id="ivCompany">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="ivEmail">Email</label>
+                      <input class="form-control" id="ivEmail" type="email">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="ivPhone">Phone</label>
+                      <input class="form-control" id="ivPhone">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="ivLine1">Street address</label>
+                      <input class="form-control" id="ivLine1">
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label" for="ivCity">City</label>
+                      <input class="form-control" id="ivCity">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label" for="ivState">State / region</label>
+                      <input class="form-control" id="ivState">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label" for="ivZip">Postal code</label>
+                      <input class="form-control" id="ivZip">
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label" for="ivCountry">Country</label>
+                      <input class="form-control" id="ivCountry">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label" for="ivTaxId">Tax / VAT ID</label>
+                      <input class="form-control" id="ivTaxId">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head">
+                  <h2>Line items</h2>
+                  <button class="btn btn-kd-outline btn-sm" type="button" id="adAddItem">
+                    <i data-lucide="plus"></i> Add line
+                  </button>
+                </div>
+                <div class="ad-table-wrap">
+                  <table class="ad-table">
+                    <thead>
+                      <tr>
+                        <th>Description</th>
+                        <th style="width:100px">Qty</th>
+                        <th style="width:140px">Unit price</th>
+                        <th style="width:130px" class="text-end">Amount</th>
+                        <th style="width:44px"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="adInvoiceItems"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-head"><h2>Notes &amp; terms</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="ivNotes">Notes to the client</label>
+                    <textarea class="form-control" id="ivNotes" rows="3"
+                              placeholder="Scope covered by this invoice, milestone reached, anything worth recording."></textarea>
+                  </div>
+                  <div>
+                    <label class="form-label" for="ivTerms">Payment terms</label>
+                    <textarea class="form-control" id="ivTerms" rows="2"></textarea>
+                  </div>
+                  <div>
+                    <label class="form-label" for="ivBank">Payment details</label>
+                    <textarea class="form-control" id="ivBank" rows="4"></textarea>
+                    <div class="form-text">Printed on the invoice. Defaults come from Company settings → Invoicing.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ---------- Right: meta + totals ---------- -->
+            <div class="col-lg-4">
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Invoice</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="ivNumber">Number</label>
+                    <input class="form-control kd-mono" id="ivNumber" placeholder="auto">
+                    <div class="form-text" id="ivNumberHint">Leave blank to use the next sequential number.</div>
+                  </div>
+                  <div>
+                    <label class="form-label" for="ivStatus">Status</label>
+                    <select class="form-select" id="ivStatus">
+                      <option value="draft">Draft</option>
+                      <option value="sent">Sent</option>
+                      <option value="paid">Paid</option>
+                      <option value="overdue">Overdue</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <label class="form-label" for="ivIssueDate">Issue date</label>
+                      <input class="form-control" id="ivIssueDate" type="date">
+                    </div>
+                    <div class="col-6">
+                      <label class="form-label" for="ivDueDate">Due date</label>
+                      <input class="form-control" id="ivDueDate" type="date">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="form-label" for="ivPo">PO / reference</label>
+                    <input class="form-control" id="ivPo">
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Totals</h2></div>
+                <div class="ad-card-body">
+                  <div class="row g-2 mb-3">
+                    <div class="col-6">
+                      <label class="form-label" for="ivCurrency">Currency</label>
+                      <input class="form-control" id="ivCurrency" maxlength="3" placeholder="USD">
+                    </div>
+                    <div class="col-6">
+                      <label class="form-label" for="ivDiscount">Discount</label>
+                      <input class="form-control" id="ivDiscount" type="number" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="col-7">
+                      <label class="form-label" for="ivTaxLabel">Tax label</label>
+                      <input class="form-control" id="ivTaxLabel" placeholder="Sales tax">
+                    </div>
+                    <div class="col-5">
+                      <label class="form-label" for="ivTaxRate">Rate %</label>
+                      <input class="form-control" id="ivTaxRate" type="number" step="0.01" min="0" value="0">
+                    </div>
+                  </div>
+
+                  <!-- Live preview; the server recomputes and stores the authoritative figures -->
+                  <dl class="mb-0">
+                    <div class="kd-meta-row"><dt>Subtotal</dt><dd id="ivSubtotal">—</dd></div>
+                    <div class="kd-meta-row"><dt>Discount</dt><dd id="ivDiscountOut">—</dd></div>
+                    <div class="kd-meta-row"><dt id="ivTaxOutLabel">Tax</dt><dd id="ivTaxOut">—</dd></div>
+                    <div class="kd-meta-row" style="border-top:1px solid var(--kd-line-strong)">
+                      <dt class="kd-ink fw-semibold">Total due</dt>
+                      <dd id="ivTotal" style="font-size:1.05rem">—</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-body d-grid gap-2">
+                  <button class="btn btn-kd-accent" type="submit"><i data-lucide="save"></i> Save invoice</button>
+                  <a class="btn btn-kd-outline d-none" id="adInvoicePrint" target="_blank" rel="noopener">
+                    <i data-lucide="printer"></i> View / download PDF
+                  </a>
+                  <a class="btn btn-kd-ghost" href="#/invoices">Back to archive</a>
+                  <button class="btn btn-kd-ghost text-danger d-none" type="button" id="adDeleteInvoice">
+                    <i data-lucide="trash-2"></i> Delete invoice
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </form>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════
+           VIEW · COMPANY SETTINGS
+           ════════════════════════════════════════════════════════════ -->
+      <section class="ad-view" id="view-settings">
+        <form id="adSettingsForm">
+          <div class="row g-3">
+
+            <div class="col-lg-6">
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Identity</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="sCompanyName">Company name</label>
+                    <input class="form-control" id="sCompanyName" name="companyName">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sLegalName">Registered legal name</label>
+                    <input class="form-control" id="sLegalName" name="legalName">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sTagline">Tagline</label>
+                    <input class="form-control" id="sTagline" name="tagline">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sCopyright">Footer copyright</label>
+                    <input class="form-control" id="sCopyright" name="copyright">
+                    <div class="form-text">Use <code>{year}</code> to insert the current year automatically.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-head"><h2>Contact</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="sEmail">Official email</label>
+                    <input class="form-control" id="sEmail" name="email" type="email">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sSupportEmail">Support email</label>
+                    <input class="form-control" id="sSupportEmail" name="supportEmail" type="email">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sPhone">Support phone</label>
+                    <input class="form-control" id="sPhone" name="phone">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>US business address</h2></div>
+                <div class="ad-card-body">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label" for="sLine1">Street address</label>
+                      <input class="form-control" id="sLine1" name="line1">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="sCity">City</label>
+                      <input class="form-control" id="sCity" name="city">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label" for="sState">State</label>
+                      <input class="form-control" id="sState" name="state">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label" for="sZip">ZIP</label>
+                      <input class="form-control" id="sZip" name="zip">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="sCountry">Country</label>
+                      <input class="form-control" id="sCountry" name="country">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card mb-3">
+                <div class="ad-card-head"><h2>Social profiles</h2></div>
+                <div class="ad-card-body d-grid gap-3">
+                  <div>
+                    <label class="form-label" for="sX"><i data-lucide="twitter"></i> X</label>
+                    <input class="form-control" id="sX" name="x" type="url" placeholder="https://x.com/…">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sLinkedin"><i data-lucide="linkedin"></i> LinkedIn</label>
+                    <input class="form-control" id="sLinkedin" name="linkedin" type="url">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sGithub"><i data-lucide="github"></i> GitHub</label>
+                    <input class="form-control" id="sGithub" name="github" type="url">
+                  </div>
+                  <div>
+                    <label class="form-label" for="sInstagram"><i data-lucide="instagram"></i> Instagram</label>
+                    <input class="form-control" id="sInstagram" name="instagram" type="url">
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-card">
+                <div class="ad-card-body">
+                  <button class="btn btn-kd-accent w-100" type="submit"><i data-lucide="save"></i> Save settings</button>
+                  <p class="form-text text-center mb-0 mt-2">
+                    Changes appear immediately across the public site.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ---- Invoicing defaults: applied to every new invoice ---- -->
+            <div class="col-12">
+              <div class="ad-card">
+                <div class="ad-card-head">
+                  <h2>Invoicing defaults</h2>
+                  <button class="btn btn-kd-accent btn-sm" type="button" id="adSaveInvoiceSettings">
+                    <i data-lucide="save"></i> Save invoicing
+                  </button>
+                </div>
+                <div class="ad-card-body">
+                  <div class="row g-3">
+
+                    <div class="col-md-3">
+                      <label class="form-label" for="isPrefix">Number prefix</label>
+                      <input class="form-control" id="isPrefix" placeholder="KOY">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label" for="isFormat">Number format</label>
+                      <input class="form-control kd-mono" id="isFormat" placeholder="{prefix}-{year}-{seq}">
+                      <div class="form-text"><code>{prefix}</code> <code>{year}</code> <code>{seq}</code></div>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label" for="isNextNumber">Next number</label>
+                      <input class="form-control" id="isNextNumber" type="number" min="1" step="1">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label" for="isPadding">Digits</label>
+                      <input class="form-control" id="isPadding" type="number" min="1" max="8" step="1">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label" for="isCurrency">Currency</label>
+                      <input class="form-control" id="isCurrency" maxlength="3" placeholder="USD">
+                    </div>
+
+                    <div class="col-md-4">
+                      <label class="form-label" for="isTaxLabel">Tax label</label>
+                      <input class="form-control" id="isTaxLabel" placeholder="Sales tax">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label" for="isTaxRate">Default rate %</label>
+                      <input class="form-control" id="isTaxRate" type="number" step="0.01" min="0">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="isLogo">Invoice logo</label>
+                      <input class="form-control" id="isLogo" placeholder="/logo/logoText.png">
+                      <div class="form-text">Printed at the top of every invoice.</div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label" for="isTerms">Default payment terms</label>
+                      <textarea class="form-control" id="isTerms" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="isBank">Default payment details</label>
+                      <textarea class="form-control" id="isBank" rows="3"></textarea>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="isFooter">Invoice footer note</label>
+                      <input class="form-control" id="isFooter" placeholder="Thank you for your business.">
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- Inquiry detail -->
+<div class="modal fade" id="adInquiryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" style="border:1px solid var(--kd-line);border-radius:var(--kd-radius-lg)">
+      <div class="modal-header">
+        <div>
+          <h2 class="kd-h3 mb-1" id="adInquirySubject">Subject</h2>
+          <p class="kd-muted small mb-0" id="adInquiryFrom"></p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0" id="adInquiryMessage" style="white-space:pre-wrap"></p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-kd" id="adInquiryReply"><i data-lucide="reply"></i> Reply by email</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Destructive-action confirmation -->
+<div class="modal fade" id="adConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border:1px solid var(--kd-line);border-radius:var(--kd-radius-lg)">
+      <div class="modal-body p-4">
+        <h2 class="kd-h3 mb-2" id="adConfirmTitle">Are you sure?</h2>
+        <p class="kd-muted small mb-4" id="adConfirmBody">This cannot be undone.</p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-kd-outline flex-fill" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-kd flex-fill" id="adConfirmOk" style="background:var(--kd-danger);border-color:var(--kd-danger)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ad-toasts" id="adToasts" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js" defer></script>
+<script src="/admin/js/admin.js" defer></script>
+</body>
+</html>

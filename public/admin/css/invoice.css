@@ -1,0 +1,227 @@
+/* ==========================================================================
+   invoice.css — the printable invoice document.
+
+   Screen: an A4-proportioned sheet on a grey desk.
+   Print:  the sheet fills the page, toolbar and shadows disappear.
+   "Download PDF" is the browser's own print-to-PDF, so what you see here is
+   exactly what the client receives.
+   ========================================================================== */
+
+.iv-body {
+  background: var(--kd-surface-2);
+  padding: 0 0 4rem;
+  color: var(--kd-ink-2);
+}
+
+/* ---------------------------------------------------------- toolbar ---- */
+.iv-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .7rem clamp(1rem, 4vw, 2rem);
+  background: rgba(255, 255, 255, .9);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--kd-line);
+  margin-bottom: clamp(1rem, 4vw, 2.5rem);
+}
+
+.iv-state { text-align: center; padding: 4rem 1rem; color: var(--kd-faint); }
+
+/* ------------------------------------------------------------ sheet ---- */
+.iv-sheet {
+  position: relative;
+  width: min(210mm, calc(100% - 2rem));
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 18mm 16mm;
+  background: #fff;
+  border: 1px solid var(--kd-line);
+  border-radius: 4px;
+  box-shadow: var(--kd-shadow-lift);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Diagonal stamp for drafts and cancelled invoices */
+.iv-watermark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font-size: clamp(3rem, 12vw, 7rem);
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: rgba(15, 23, 42, .055);
+  transform: rotate(-24deg);
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------- header ---- */
+.iv-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 2px solid var(--kd-ink);
+  margin-bottom: 1.6rem;
+}
+
+.iv-logo { height: 48px; width: auto; display: block; margin-bottom: .9rem; }
+
+.iv-address {
+  font-style: normal;
+  font-size: 9.5pt;
+  line-height: 1.6;
+  color: var(--kd-muted);
+  white-space: pre-line;
+  margin: 0;
+}
+.iv-address strong { color: var(--kd-ink); font-weight: 600; display: block; margin-bottom: .15rem; }
+
+.iv-meta { text-align: right; flex: none; }
+
+.iv-title {
+  font-size: 1.9rem;
+  letter-spacing: -0.035em;
+  font-weight: 650;
+  color: var(--kd-ink);
+  margin: 0 0 .7rem;
+  text-transform: uppercase;
+}
+
+.iv-meta-list { margin: 0; font-size: 9.5pt; }
+.iv-meta-list > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.1rem;
+  padding: .12rem 0;
+}
+.iv-meta-list dt { color: var(--kd-faint); }
+.iv-meta-list dd { margin: 0; color: var(--kd-ink); font-weight: 550; min-width: 88px; text-align: right; }
+
+/* ---------------------------------------------------------- parties ---- */
+.iv-parties {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.8rem;
+}
+
+.iv-label {
+  font-size: 7.5pt;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--kd-faint);
+  font-weight: 600;
+  margin: 0 0 .45rem;
+}
+
+.iv-amount-due { text-align: right; flex: none; }
+.iv-amount {
+  font-size: 1.55rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: var(--kd-ink);
+  margin: 0;
+  line-height: 1.15;
+}
+.iv-amount-sub { font-size: 9pt; color: var(--kd-muted); margin: .2rem 0 0; }
+.iv-amount-sub.is-overdue { color: var(--kd-danger); font-weight: 550; }
+
+/* ------------------------------------------------------------ table ---- */
+.iv-table { width: 100%; border-collapse: collapse; margin-bottom: 1.4rem; }
+
+.iv-table th {
+  font-size: 7.5pt;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--kd-faint);
+  font-weight: 600;
+  text-align: left;
+  padding: .5rem .6rem;
+  border-bottom: 1px solid var(--kd-line-strong);
+}
+.iv-table th.num, .iv-table td.num { text-align: right; }
+
+.iv-table td {
+  padding: .62rem .6rem;
+  border-bottom: 1px solid var(--kd-line);
+  vertical-align: top;
+}
+.iv-table td:first-child { color: var(--kd-ink); }
+.iv-table td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.iv-table tr { break-inside: avoid; }
+
+/* ----------------------------------------------------------- totals ---- */
+.iv-totals { display: flex; justify-content: flex-end; margin-bottom: 2rem; break-inside: avoid; }
+.iv-totals dl { width: min(280px, 60%); margin: 0; }
+.iv-totals > dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .32rem 0;
+  font-size: 10pt;
+}
+.iv-totals dt { color: var(--kd-muted); }
+.iv-totals dd { margin: 0; color: var(--kd-ink); font-variant-numeric: tabular-nums; }
+.iv-totals .is-grand {
+  border-top: 2px solid var(--kd-ink);
+  margin-top: .35rem;
+  padding-top: .55rem;
+  font-size: 12pt;
+}
+.iv-totals .is-grand dt, .iv-totals .is-grand dd { color: var(--kd-ink); font-weight: 650; }
+
+/* ------------------------------------------------------------ notes ---- */
+.iv-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.4rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--kd-line);
+  break-inside: avoid;
+}
+.iv-note-block p {
+  margin: 0;
+  font-size: 9.5pt;
+  color: var(--kd-muted);
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+.iv-foot {
+  margin-top: auto;
+  padding-top: 1.6rem;
+  text-align: center;
+}
+.iv-foot p { margin: 0; font-size: 9.5pt; color: var(--kd-muted); }
+.iv-foot-legal { margin-top: .35rem !important; font-size: 8pt; color: var(--kd-faint); }
+
+/* ------------------------------------------------------------ print ---- */
+@page { size: A4; margin: 12mm; }
+
+@media print {
+  .iv-body { background: #fff; padding: 0; }
+  .no-print { display: none !important; }
+
+  .iv-sheet {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Keep the watermark and table rules visible in print output */
+  .iv-watermark { color: rgba(15, 23, 42, .07); }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

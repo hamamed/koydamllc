@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Koydam LLC</title>
+  <meta name="description" content="Start a project with Koydam LLC. Tell us what you're building and we'll reply within one business day.">
+  <link rel="canonical" href="https://koydam.com/contact.html">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="icon" type="image/png" href="/logo/koydam.png">
+  <link rel="apple-touch-icon" href="/logo/app-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/koydam.css" rel="stylesheet">
+</head>
+
+<body>
+<a href="#main" class="visually-hidden-focusable btn btn-kd position-absolute m-3">Skip to content</a>
+
+<header class="kd-navbar sticky-top">
+  <nav class="navbar navbar-expand-lg py-2" aria-label="Primary">
+    <div class="container kd-container">
+      <a class="navbar-brand" href="/">
+        <img class="kd-brand-mark" src="/logo/logo.png" alt="Koydam LLC" width="28" height="32">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#kdNav"
+              aria-controls="kdNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="kdNav">
+        <ul class="navbar-nav mx-lg-auto gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="/apps.html">Works</a></li>
+          <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+          <button class="btn btn-kd-ghost btn-sm" data-bs-toggle="modal" data-bs-target="#kdLoginModal">
+            <i data-lucide="lock"></i> Client portal
+          </button>
+          <a class="btn btn-kd btn-sm" href="/contact.html">Start a project</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="kd-section">
+    <div class="container kd-container">
+      <div class="row g-5">
+
+        <!-- ---- Left: company details ---- -->
+        <div class="col-lg-5">
+          <p class="kd-eyebrow mb-3">Contact</p>
+          <h1 class="kd-h2 mb-4">Tell us what you're building.</h1>
+          <p class="kd-lead mb-5">
+            Send a short brief and we'll reply within one business day with next steps,
+            a rough timeline, and an honest read on whether we're the right fit.
+          </p>
+
+          <dl class="mb-5">
+            <div class="kd-meta-row">
+              <dt><i data-lucide="mail"></i> Email</dt>
+              <dd><a href="mailto:hello@koydam.com" data-kd="company.email" data-kd-href="mailto">hello@koydam.com</a></dd>
+            </div>
+            <div class="kd-meta-row">
+              <dt><i data-lucide="life-buoy"></i> Support</dt>
+              <dd><a href="mailto:support@koydam.com" data-kd="company.supportEmail" data-kd-href="mailto">support@koydam.com</a></dd>
+            </div>
+            <div class="kd-meta-row" data-kd-wrap>
+              <dt><i data-lucide="phone"></i> Phone</dt>
+              <dd><a href="tel:" data-kd="company.phone" data-kd-href="tel" data-kd-hide-empty></a></dd>
+            </div>
+            <div class="kd-meta-row">
+              <dt><i data-lucide="map-pin"></i> Office</dt>
+              <dd class="text-end" data-kd="company.address">Sheridan, WY, United States</dd>
+            </div>
+          </dl>
+
+          <div class="kd-card p-4 kd-surface">
+            <h2 class="kd-h3 mb-2">Working hours</h2>
+            <p class="small kd-muted mb-0">
+              Monday – Friday, 9:00 – 18:00 (UTC−7).<br>
+              Enquiries received at the weekend are answered on Monday.
+            </p>
+          </div>
+        </div>
+
+        <!-- ---- Right: form ---- -->
+        <div class="col-lg-6 offset-lg-1">
+          <div class="kd-card p-4 p-lg-5">
+            <form data-contact-form novalidate>
+              <div class="row g-3">
+
+                <div class="col-md-6">
+                  <label class="form-label" for="cName">Name</label>
+                  <input class="form-control" id="cName" name="name" autocomplete="name" required>
+                  <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="cEmail">Email</label>
+                  <input class="form-control" id="cEmail" name="email" type="email" autocomplete="email" required>
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="cCompany">Company <span class="kd-faint">(optional)</span></label>
+                  <input class="form-control" id="cCompany" name="company" autocomplete="organization">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="cSubject">What do you need?</label>
+                  <select class="form-select" id="cSubject" name="subject">
+                    <option>Mobile app development</option>
+                    <option>Web development</option>
+                    <option>Custom software &amp; API</option>
+                    <option>UI/UX design</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="cMessage">Project brief</label>
+                  <textarea class="form-control" id="cMessage" name="message" rows="6"
+                            placeholder="What are you building, who is it for, and when does it need to launch?" required></textarea>
+                  <div class="invalid-feedback">Please tell us a little more.</div>
+                </div>
+
+                <!-- Honeypot -->
+                <input class="kd-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+                <div class="col-12 d-flex flex-wrap align-items-center gap-3 pt-2">
+                  <button class="btn btn-kd-accent" type="submit">Send message <i data-lucide="send"></i></button>
+                  <div data-form-status role="status" aria-live="polite"></div>
+                </div>
+
+                <div class="col-12">
+                  <p class="form-text mb-0">
+                    By sending this form you agree to our <a href="/privacy.html">Privacy Policy</a>.
+                  </p>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="kd-footer">
+  <div class="container kd-container py-5">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-4">
+        <a class="navbar-brand d-inline-flex mb-3" href="/">
+          <img class="kd-brand-mark" src="/logo/logo.png" alt="Koydam LLC" width="28" height="32">
+        </a>
+        <p class="kd-muted small mb-4" style="max-width:34ch" data-kd="company.tagline">
+          Full-cycle software development studio.
+        </p>
+        <div class="d-flex gap-2">
+          <a class="kd-social" data-kd-social="x" href="#" aria-label="X"><i data-lucide="twitter"></i></a>
+          <a class="kd-social" data-kd-social="linkedin" href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+          <a class="kd-social" data-kd-social="github" href="#" aria-label="GitHub"><i data-lucide="github"></i></a>
+          <a class="kd-social" data-kd-social="instagram" href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Company</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="/#about">About</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/apps.html">Works</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Legal</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="/privacy.html">Privacy Policy</a></li>
+          <li><a href="/terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6>Get in touch</h6>
+        <ul class="list-unstyled d-grid gap-2 mb-0">
+          <li><a href="mailto:hello@koydam.com" data-kd="company.email" data-kd-href="mailto">hello@koydam.com</a></li>
+          <li data-kd-wrap><a href="tel:" data-kd="company.phone" data-kd-href="tel" data-kd-hide-empty></a></li>
+          <li class="kd-muted small" data-kd="company.address">Sheridan, WY, United States</li>
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-4 mt-4 kd-rule-t">
+      <p class="kd-faint small mb-0" data-kd="company.copyright">© Koydam LLC. All rights reserved.</p>
+      <p class="kd-faint small mb-0">Registered in the United States</p>
+    </div>
+  </div>
+</footer>
+<div class="modal fade" id="kdLoginModal" tabindex="-1" aria-labelledby="kdLoginTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border:1px solid var(--kd-line); border-radius:var(--kd-radius-lg)">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h2 class="kd-h3 mb-1" id="kdLoginTitle">Client portal</h2>
+          <p class="kd-muted small mb-0">Sign in to manage site content.</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-4">
+        <form id="kdLoginForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label" for="loginEmail">Email</label>
+            <input class="form-control" id="loginEmail" name="email" type="email" autocomplete="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input class="form-control" id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <div id="kdLoginError" class="mb-3 d-none"></div>
+          <button class="btn btn-kd w-100" type="submit"><i data-lucide="log-in"></i> Sign in</button>
+        </form>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <p class="kd-faint small mb-0">Not a client yet? <a href="/contact.html">Start a project</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js" defer></script>
+<script src="/js/koydam.js" defer></script>
+</body>
+</html>
