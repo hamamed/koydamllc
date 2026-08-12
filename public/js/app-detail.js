@@ -5,7 +5,28 @@
 
 (async () => {
   'use strict';
-  const { $, api, esc, safeUrl, icons, appIcon, platformTags, launchBadge, appCard, initReveal, PLATFORM_META, LAUNCH_META } = KD;
+  const { $, api, esc, safeUrl, icons, appIcon, platformTags, appCard, initReveal, PLATFORM_META } = KD;
+
+  /* Launch-state helpers.
+   *
+   * These arrived in koydam.js later than this file's first use of them, and
+   * the two scripts are cached independently by browsers and by any CDN in
+   * front of the site. A visitor holding an older koydam.js would otherwise hit
+   * "launchBadge is not a function" and get a blank page. Falling back to a
+   * local copy keeps the page working; it converges on the shared version as
+   * soon as the cache catches up. */
+  const LAUNCH_META = KD.LAUNCH_META || {
+    'coming-soon':    { label: 'Coming soon',    icon: 'clock',         cls: 'kd-tag-accent' },
+    'in-development': { label: 'In development', icon: 'hammer',        cls: 'kd-tag-warn' },
+    beta:             { label: 'Beta',           icon: 'flask-conical', cls: 'kd-tag-accent' },
+  };
+
+  const launchBadge = KD.launchBadge || ((app) => {
+    const meta = LAUNCH_META[app.launchStatus];
+    if (!meta) return '';
+    const when = app.expectedLaunch ? ` · ${esc(app.expectedLaunch)}` : '';
+    return `<span class="kd-tag ${meta.cls}"><i data-lucide="${meta.icon}"></i>${esc(meta.label)}${when}</span>`;
+  });
 
   const slug = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() || '');
 
