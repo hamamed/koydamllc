@@ -36,12 +36,30 @@ const KEEP_BACKUPS = 20;
 let cache = null;      // in-memory copy, avoids a disk read per request
 let writeQueue = Promise.resolve();
 
+/** The pre-KOYDAM_DATA_DIR location, kept for one-time migration. */
+const LEGACY_FILE = path.join(__dirname, '..', 'data', 'content.json');
+
 function ensureFile() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  if (!fs.existsSync(DATA_FILE)) {
-    const seed = fs.existsSync(SEED_FILE) ? fs.readFileSync(SEED_FILE, 'utf8') : '{}';
-    fs.writeFileSync(DATA_FILE, seed);
+  if (fs.existsSync(DATA_FILE)) return;
+
+  // Moving to an external data directory must not silently reset the site.
+  // If content already exists in the old in-project location, adopt it rather
+  // than starting from the demo seed.
+  if (DATA_FILE !== LEGACY_FILE && fs.existsSync(LEGACY_FILE)) {
+    try {
+      fs.copyFileSync(LEGACY_FILE, DATA_FILE);
+      console.log(`[db] migrated existing content from ${LEGACY_FILE}`);
+      console.log(`[db]   to ${DATA_FILE} — the original was left in place.`);
+      return;
+    } catch (err) {
+      console.warn(`[db] could not migrate existing content: ${err.message}`);
+    }
   }
+
+  const seed = fs.existsSync(SEED_FILE) ? fs.readFileSync(SEED_FILE, 'utf8') : '{}';
+  fs.writeFileSync(DATA_FILE, seed);
+  console.log('[db] no existing content found — started from the seed.');
 }
 
 /** Returns the full content document (cached). */
@@ -131,7 +149,13 @@ function newId(prefix) {
 function describeStorage() {
   const external = Boolean(process.env.KOYDAM_DATA_DIR);
   const exists = fs.existsSync(DATA_FILE);
-  const lines = [`Content store: ${DATA_FILE}${exists ? '' : ' (will be seeded on first write)'}`];
+  const willMigrate = !exists && DATA_FILE !== LEGACY_FILE && fs.existsSync(LEGACY_FILE);
+
+  const note = exists ? ''
+    : willMigrate ? ' (empty — existing content will be copied here on first use)'
+    : ' (empty — will start from the seed)';
+
+  const lines = [`Content store: ${DATA_FILE}${note}`];
 
   if (!external) {
     lines.push('  WARNING: this is inside the project directory. A deployment that');
