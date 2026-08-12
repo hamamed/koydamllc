@@ -24,7 +24,12 @@ const auth = require('./lib/auth');
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
-const UPLOAD_DIR = path.join(PUBLIC_DIR, 'uploads');
+
+// Like the content store, uploads must be able to live outside the deploy
+// directory — otherwise a clean checkout deletes every icon and screenshot.
+const UPLOAD_DIR = process.env.KOYDAM_UPLOAD_DIR
+  ? path.resolve(process.env.KOYDAM_UPLOAD_DIR)
+  : path.join(PUBLIC_DIR, 'uploads');
 
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
@@ -763,5 +768,7 @@ app.listen(PORT, () => {
   console.log(`Koydam server → http://localhost:${PORT}`);
   console.log(`Admin panel    → http://localhost:${PORT}/admin/`);
   console.log(envLoader.describe(ENV_SOURCES));
+  console.log(db.describeStorage());
+  console.log(`Uploads:       ${UPLOAD_DIR}`);
   auth.warnIfMisconfigured();
 });

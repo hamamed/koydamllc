@@ -10,21 +10,65 @@
 
 ---
 
-## 1. What has to survive a redeploy
+## 1. Keep your data outside the deploy directory
 
-Two things are **deliberately not in git**, because they are your live data:
+Three things are **deliberately not in git**, because they are your live data:
 
-| Path | What it is | If you lose it |
+| What | Default location | If you lose it |
 | --- | --- | --- |
-| `server/data/content.json` | Every app, page, setting, inquiry, and invoice | The site reverts to the seed; all invoices gone |
-| `public/uploads/` | Uploaded icons and screenshots | Broken images across the site |
-| `.env` | Session secret + admin password hash | Nobody can log in |
+| Content store | `server/data/content.json` | Every app, page, setting, enquiry and invoice — gone, site reset to demo content |
+| Uploads | `public/uploads/` | Broken images across the site |
+| Config | `.env` | Nobody can log in |
 
-On first boot, `content.json` is created automatically from
-`server/data/content.seed.json`. On every deploy after that, **do not delete it** —
-a `git pull` won't touch it, but a "wipe and re-upload" will.
+**By default all three sit inside the project directory, which a deployment
+replaces.** `git pull` alone is safe, but a clean checkout, a "wipe and
+re-upload", or `git reset --hard` + `git clean` deletes them — and the site
+silently reseeds itself from the demo data on next boot.
 
-**Back these up before each deploy.**
+Move all three out of the deploy path:
+
+```
+/home/youruser/
+├── koydam.env              ← config
+├── koydam-data/            ← content, backups
+│   ├── content.json
+│   ├── backups/
+│   └── uploads/
+└── koydam/                 ← the app, replaced on every deploy
+```
+
+Set these two variables (alongside the rest of your config):
+
+```ini
+KOYDAM_DATA_DIR=/home/youruser/koydam-data
+KOYDAM_UPLOAD_DIR=/home/youruser/koydam-data/uploads
+```
+
+Then no deployment can touch your content. The server prints where it is
+storing data at startup, and **warns** when that location is inside the project:
+
+```
+Content store: /home/youruser/koydam-data/content.json
+Uploads:       /home/youruser/koydam-data/uploads
+```
+
+### Moving existing content
+
+If you already have content in the project directory, copy it across **before**
+setting the variables, or you will start from the seed again:
+
+```bash
+mkdir -p /home/youruser/koydam-data/uploads
+cp koydam/server/data/content.json /home/youruser/koydam-data/
+cp -r koydam/public/uploads/*       /home/youruser/koydam-data/uploads/
+```
+
+### Automatic backups
+
+Every write snapshots the previous version to `<data dir>/backups/`, keeping the
+last 20. To restore, stop the app, copy a snapshot over `content.json`, start it
+again. This is a safety net, not an offsite backup — copy the data directory
+somewhere else periodically as well.
 
 ---
 

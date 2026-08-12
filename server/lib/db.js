@@ -10,9 +10,28 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+/**
+ * Where live content is stored.
+ *
+ * Defaults to server/data inside the project, which is fine locally — but a
+ * deployment rewrites the project directory, and a clean checkout takes
+ * content.json with it: every app, page, invoice and enquiry, gone, silently
+ * reseeded from the demo data on next boot.
+ *
+ * Set KOYDAM_DATA_DIR to a directory OUTSIDE the deploy path and no deployment
+ * can touch your content.
+ */
+const DATA_DIR = process.env.KOYDAM_DATA_DIR
+  ? path.resolve(process.env.KOYDAM_DATA_DIR)
+  : path.join(__dirname, '..', 'data');
+
 const DATA_FILE = path.join(DATA_DIR, 'content.json');
-const SEED_FILE = path.join(DATA_DIR, 'content.seed.json');
+
+// The seed ships with the code and always lives in the project.
+const SEED_FILE = path.join(__dirname, '..', 'data', 'content.seed.json');
+
+const BACKUP_DIR = path.join(DATA_DIR, 'backups');
+const KEEP_BACKUPS = 20;
 
 let cache = null;      // in-memory copy, avoids a disk read per request
 let writeQueue = Promise.resolve();
@@ -34,13 +53,38 @@ function read() {
 }
 
 /**
+ * Keeps a rolling set of snapshots. content.json is the entire site, so a bad
+ * edit or a corrupt write should never be unrecoverable.
+ */
+function snapshot() {
+  try {
+    if (!fs.existsSync(DATA_FILE)) return;
+    if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
+
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    fs.copyFileSync(DATA_FILE, path.join(BACKUP_DIR, `content-${stamp}.json`));
+
+    const old = fs.readdirSync(BACKUP_DIR)
+      .filter((f) => f.startsWith('content-') && f.endsWith('.json'))
+      .sort()
+      .slice(0, -KEEP_BACKUPS);
+    for (const file of old) fs.unlinkSync(path.join(BACKUP_DIR, file));
+  } catch (err) {
+    // A failed backup must never block the write itself.
+    console.warn(`[db] could not write backup: ${err.message}`);
+  }
+}
+
+/**
  * Persists the document. Writes are serialised through a promise queue and go
  * to a temp file first, so a crash mid-write can never truncate content.json.
+ * The previous version is snapshotted before every overwrite.
  */
 function write(doc) {
   cache = doc;
   writeQueue = writeQueue.then(() => new Promise((resolve, reject) => {
     ensureFile();
+    snapshot();
     const tmp = `${DATA_FILE}.${process.pid}.tmp`;
     fs.writeFile(tmp, JSON.stringify(doc, null, 2), (err) => {
       if (err) return reject(err);
@@ -83,4 +127,21 @@ function newId(prefix) {
   return `${prefix}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 }
 
-module.exports = { read, write, update, slugify, uniqueSlug, newId, DATA_FILE };
+/** Describes where content lives, and warns when it sits inside the deploy path. */
+function describeStorage() {
+  const external = Boolean(process.env.KOYDAM_DATA_DIR);
+  const exists = fs.existsSync(DATA_FILE);
+  const lines = [`Content store: ${DATA_FILE}${exists ? '' : ' (will be seeded on first write)'}`];
+
+  if (!external) {
+    lines.push('  WARNING: this is inside the project directory. A deployment that');
+    lines.push('  replaces the project will delete it, resetting the site to demo');
+    lines.push('  content. Set KOYDAM_DATA_DIR to a directory outside the deploy path.');
+  }
+  return lines.join('\n');
+}
+
+module.exports = {
+  read, write, update, slugify, uniqueSlug, newId,
+  DATA_FILE, DATA_DIR, BACKUP_DIR, describeStorage,
+};
