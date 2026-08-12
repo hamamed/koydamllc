@@ -978,6 +978,55 @@
               </div>
             </div>
 
+            <!-- ---- Backup & restore ---- -->
+            <div class="col-12">
+              <div class="ad-card">
+                <div class="ad-card-head">
+                  <h2>Backup &amp; restore</h2>
+                  <a class="btn btn-kd btn-sm" href="/api/admin/backup" download>
+                    <i data-lucide="download"></i> Download backup
+                  </a>
+                </div>
+                <div class="ad-card-body">
+                  <div class="row g-4">
+
+                    <div class="col-md-6">
+                      <p class="ad-section-label">What the backup contains</p>
+                      <ul class="kd-tick-list mb-3">
+                        <li><i data-lucide="check"></i> Every app, including drafts</li>
+                        <li><i data-lucide="check"></i> Privacy Policy, Terms, landing-page copy</li>
+                        <li><i data-lucide="check"></i> Company settings and invoicing defaults</li>
+                        <li><i data-lucide="check"></i> All invoices and contact enquiries</li>
+                      </ul>
+                      <p class="form-text mb-0">
+                        <strong>Not included:</strong> uploaded images. Those are files on the
+                        server — copy the uploads folder separately if you need them.
+                        Download a backup before every deployment.
+                      </p>
+                    </div>
+
+                    <div class="col-md-6">
+                      <p class="ad-section-label">Restore from a backup</p>
+                      <label class="ad-drop d-block mb-3" id="adRestoreDrop">
+                        <i data-lucide="upload"></i>
+                        <span id="adRestoreLabel">Choose a backup file (.json)</span>
+                        <input type="file" class="d-none" id="adRestoreFile" accept="application/json,.json">
+                      </label>
+                      <button class="btn btn-kd-outline w-100" type="button" id="adRestoreBtn" disabled>
+                        <i data-lucide="rotate-ccw"></i> Restore this backup
+                      </button>
+                      <p class="form-text mb-0 mt-2">
+                        Replaces all current content. The version being replaced is
+                        snapshotted first, so a mistaken restore can be undone from
+                        the server's backups folder.
+                      </p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- ---- Invoicing defaults: applied to every new invoice ---- -->
             <div class="col-12">
               <div class="ad-card">

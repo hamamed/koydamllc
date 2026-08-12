@@ -705,6 +705,60 @@ admin.delete('/inquiries/:id', async (req, res) => {
   res.json({ ok: true });
 });
 
+/* ---- Backup & restore ----
+ * The content store is the whole site. These two routes make it recoverable
+ * without shell access, which matters on shared hosting.
+ * ------------------------------------------------------------------------ */
+
+admin.get('/backup', (req, res) => {
+  const doc = db.read();
+  const stamp = new Date().toISOString().slice(0, 10);
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="koydam-backup-${stamp}.json"`);
+  res.send(JSON.stringify(doc, null, 2));
+});
+
+admin.post('/restore', async (req, res) => {
+  const incoming = req.body && req.body.document;
+
+  // Guard against restoring something that is not a Koydam backup: a wrong
+  // file would otherwise wipe the site with no way back except the snapshots.
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) {
+    return res.status(400).json({ error: 'That file does not contain a backup document.' });
+  }
+  const recognised = ['settings', 'apps', 'pages', 'home'].filter((key) => key in incoming);
+  if (recognised.length < 2) {
+    return res.status(400).json({
+      error: 'That file does not look like a Koydam backup — it is missing the expected sections.',
+    });
+  }
+
+  const current = db.read();
+  // db.write() snapshots the previous file first, so the pre-restore state is
+  // always recoverable from <data dir>/backups.
+  await db.write({
+    settings: incoming.settings || current.settings,
+    home: incoming.home || current.home,
+    services: incoming.services || current.services,
+    process: incoming.process || current.process,
+    apps: arr(incoming.apps),
+    pages: incoming.pages || current.pages,
+    inquiries: arr(incoming.inquiries),
+    invoiceSettings: incoming.invoiceSettings || current.invoiceSettings,
+    invoices: arr(incoming.invoices),
+  });
+
+  const doc = db.read();
+  res.json({
+    ok: true,
+    summary: {
+      apps: arr(doc.apps).length,
+      invoices: arr(doc.invoices).length,
+      inquiries: arr(doc.inquiries).length,
+    },
+  });
+});
+
 /* ---- Uploads ---- */
 
 admin.post('/upload', upload.array('files', 12), (req, res) => {

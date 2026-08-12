@@ -1206,6 +1206,64 @@
     } catch (err) { toast(err.message, true); }
   });
 
+  /* ---- Backup & restore -------------------------------------------------- */
+
+  let restoreDocument = null;
+
+  $('#adRestoreFile').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    const label = $('#adRestoreLabel');
+    const button = $('#adRestoreBtn');
+
+    restoreDocument = null;
+    button.disabled = true;
+    if (!file) { label.textContent = 'Choose a backup file (.json)'; return; }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const apps = (parsed.apps || []).length;
+        const invoices = (parsed.invoices || []).length;
+        // Show what is inside before anything is overwritten.
+        label.textContent = `${file.name} — ${apps} app${apps === 1 ? '' : 's'}, ${invoices} invoice${invoices === 1 ? '' : 's'}`;
+        restoreDocument = parsed;
+        button.disabled = false;
+      } catch {
+        label.textContent = `${file.name} — not valid JSON`;
+        toast('That file is not a valid backup.', true);
+      }
+    };
+    reader.onerror = () => toast('Could not read that file.', true);
+    reader.readAsText(file);
+  });
+
+  $('#adRestoreBtn').addEventListener('click', async () => {
+    if (!restoreDocument) return;
+
+    const apps = (restoreDocument.apps || []).length;
+    const invoices = (restoreDocument.invoices || []).length;
+    const ok = await confirmAction({
+      title: 'Restore this backup?',
+      body: `All current content will be replaced with ${apps} app(s) and ${invoices} invoice(s) `
+        + 'from this file. The current version is snapshotted first.',
+      confirmLabel: 'Restore',
+    });
+    if (!ok) return;
+
+    try {
+      const result = await api('/restore', {
+        method: 'POST',
+        body: JSON.stringify({ document: restoreDocument }),
+      });
+      await refresh();
+      toast(`Restored — ${result.summary.apps} apps, ${result.summary.invoices} invoices`);
+      route();
+    } catch (err) {
+      toast(err.message, true);
+    }
+  });
+
   /* ---------------------------------------------------------------- chrome */
 
   $('#adMenuToggle').addEventListener('click', () => {
