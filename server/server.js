@@ -727,16 +727,19 @@ app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true 
 
 app.use(express.static(PUBLIC_DIR, {
   extensions: ['html'],
-  setHeaders(res, filePath) {
-    // Pages always revalidate. There is no build step hashing filenames, so a
-    // cached page (or a cached script it depends on) would otherwise keep
-    // showing old markup until the visitor hard-refreshes. ETags make the
-    // revalidation cheap — a 304 costs one round trip, not a re-download.
-    if (filePath.endsWith('.html') || process.env.NODE_ENV !== 'production') {
-      res.setHeader('Cache-Control', 'no-cache');
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
-    }
+  setHeaders(res) {
+    // Everything the app ships revalidates on every request.
+    //
+    // Filenames are not content-hashed, so any positive max-age lets two files
+    // from the same deploy be served at different versions — a page can load a
+    // fresh script alongside a cached one it depends on, and break with a
+    // "not a function" error until someone hard-refreshes. Correctness beats
+    // the saving: these files are small, and ETags make revalidation a ~200
+    // byte 304 rather than a re-download.
+    //
+    // Uploaded assets are the exception and are handled above: their filenames
+    // are server-generated and unique, so they are genuinely immutable.
+    res.setHeader('Cache-Control', 'no-cache');
   },
 }));
 
