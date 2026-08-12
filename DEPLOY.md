@@ -28,7 +28,7 @@ silently reseeds itself from the demo data on next boot.
 Move all three out of the deploy path:
 
 ```
-/home/youruser/
+/home/YOUR-USERNAME/
 ├── koydam.env              ← config
 ├── koydam-data/            ← content, backups
 │   ├── content.json
@@ -40,16 +40,22 @@ Move all three out of the deploy path:
 Set these two variables (alongside the rest of your config):
 
 ```ini
-KOYDAM_DATA_DIR=/home/youruser/koydam-data
-KOYDAM_UPLOAD_DIR=/home/youruser/koydam-data/uploads
+KOYDAM_DATA_DIR=/home/YOUR-USERNAME/koydam-data
+KOYDAM_UPLOAD_DIR=/home/YOUR-USERNAME/koydam-data/uploads
 ```
+
+> **Replace `YOUR-USERNAME` with your actual hosting username** — on Hostinger it
+> looks like `u114371349`. A path you have no permission to create makes the app
+> exit at startup and every page returns 503. The startup log names the variable
+> and the path when that happens; remove the variables to fall back to the
+> defaults while you sort it out.
 
 Then no deployment can touch your content. The server prints where it is
 storing data at startup, and **warns** when that location is inside the project:
 
 ```
-Content store: /home/youruser/koydam-data/content.json
-Uploads:       /home/youruser/koydam-data/uploads
+Content store: /home/YOUR-USERNAME/koydam-data/content.json
+Uploads:       /home/YOUR-USERNAME/koydam-data/uploads
 ```
 
 ### Moving existing content
@@ -58,9 +64,9 @@ If you already have content in the project directory, copy it across **before**
 setting the variables, or you will start from the seed again:
 
 ```bash
-mkdir -p /home/youruser/koydam-data/uploads
-cp koydam/server/data/content.json /home/youruser/koydam-data/
-cp -r koydam/public/uploads/*       /home/youruser/koydam-data/uploads/
+mkdir -p /home/YOUR-USERNAME/koydam-data/uploads
+cp koydam/server/data/content.json /home/YOUR-USERNAME/koydam-data/
+cp -r koydam/public/uploads/*       /home/YOUR-USERNAME/koydam-data/uploads/
 ```
 
 ### Automatic backups
@@ -142,7 +148,7 @@ with no obvious cause.
 Keep the config one level **above** the app:
 
 ```
-/home/youruser/
+/home/YOUR-USERNAME/
 ├── koydam.env          ← config lives here, deploys never touch it
 └── koydam/             ← the application directory, replaced on every deploy
     ├── server/
@@ -152,7 +158,7 @@ Keep the config one level **above** the app:
 Create it once:
 
 ```bash
-cd /home/youruser
+cd /home/YOUR-USERNAME
 nano koydam.env         # paste the variables below
 chmod 600 koydam.env    # readable only by you
 ```
@@ -170,7 +176,7 @@ found the right one:
 
 ```
 Configuration loaded from:
-  /home/youruser/koydam.env — 12 values, 12 applied
+  /home/YOUR-USERNAME/koydam.env — 12 values, 12 applied
 ```
 
 If it says `environment variables only (no config file found)`, nothing was

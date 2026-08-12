@@ -82,7 +82,48 @@ setInterval(() => {
 /* ------------------------------------------------------------------ *
  * File uploads (app icons + screenshots)
  * ------------------------------------------------------------------ */
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+/**
+ * Verifies a configured directory can be created and written to.
+ *
+ * A bad path — a placeholder pasted verbatim, a typo, a directory outside the
+ * account's home — otherwise threw during startup and the whole site returned
+ * 503 with the reason buried in a stack trace.
+ */
+function checkWritableDir(dir, variableName) {
+  try {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const probe = path.join(dir, `.write-test-${process.pid}`);
+    fs.writeFileSync(probe, 'ok');
+    fs.unlinkSync(probe);
+    return null;
+  } catch (err) {
+    return { dir, variableName, code: err.code, message: err.message };
+  }
+}
+
+const dirProblems = [
+  checkWritableDir(UPLOAD_DIR, 'KOYDAM_UPLOAD_DIR'),
+  checkWritableDir(require('./lib/db').DATA_DIR, 'KOYDAM_DATA_DIR'),
+].filter(Boolean);
+
+if (dirProblems.length) {
+  console.error('\n┌──────────────────────────────────────────────────────────────┐');
+  console.error('│  STARTUP FAILED — a configured directory is not usable        │');
+  console.error('└──────────────────────────────────────────────────────────────┘');
+  for (const p of dirProblems) {
+    console.error(`\n  ${p.variableName} → ${p.dir}`);
+    console.error(`  ${p.code || 'error'}: ${p.message}`);
+    if (p.code === 'EACCES' || p.code === 'EPERM') {
+      console.error('  No permission. The path must be inside your own account,');
+      console.error('  for example /home/YOUR-USERNAME/koydam-data');
+    } else if (p.code === 'ENOENT') {
+      console.error('  A parent directory does not exist. Check for a typo, and make');
+      console.error('  sure you replaced any example username with your own.');
+    }
+  }
+  console.error('\n  Fix the variable (or remove it to use the defaults) and restart.\n');
+  process.exit(1);
+}
 
 const ALLOWED_MIME = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml', 'image/gif']);
 const EXT_FOR_MIME = {
