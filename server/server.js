@@ -805,6 +805,43 @@ app.use(express.static(PUBLIC_DIR, {
 // /app/:slug is rendered client-side by app.html
 app.get('/app/:slug', (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'app.html')));
 
+/**
+ * sitemap.xml — generated, not a file, so it always lists the apps that are
+ * actually published. robots.txt advertises this URL.
+ */
+app.get('/sitemap.xml', (req, res) => {
+  const base = (process.env.SITE_URL || 'https://koydam.com').replace(/\/$/, '');
+  const doc = db.read();
+  const today = new Date().toISOString().slice(0, 10);
+
+  const pages = [
+    { loc: '/', priority: '1.0', freq: 'weekly' },
+    { loc: '/apps.html', priority: '0.9', freq: 'weekly' },
+    { loc: '/contact.html', priority: '0.7', freq: 'monthly' },
+    { loc: '/privacy.html', priority: '0.3', freq: 'yearly', lastmod: doc.pages?.privacy?.updatedAt },
+    { loc: '/terms.html', priority: '0.3', freq: 'yearly', lastmod: doc.pages?.terms?.updatedAt },
+    ...publicView(doc).apps.map((app) => ({
+      loc: `/app/${encodeURIComponent(app.slug)}`,
+      priority: '0.8',
+      freq: 'monthly',
+      lastmod: (app.updatedAt || '').slice(0, 10) || app.releaseDate,
+    })),
+  ];
+
+  const urls = pages.map(({ loc, priority, freq, lastmod }) => [
+    '  <url>',
+    `    <loc>${base}${loc}</loc>`,
+    `    <lastmod>${lastmod || today}</lastmod>`,
+    `    <changefreq>${freq}</changefreq>`,
+    `    <priority>${priority}</priority>`,
+    '  </url>',
+  ].join('\n')).join('\n');
+
+  res.type('application/xml').send(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+  );
+});
+
 app.use((req, res) => {
   if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Not found' });
   res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'));
