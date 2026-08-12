@@ -416,6 +416,21 @@ a { text-decoration: none; transition: color var(--kd-fast) var(--kd-ease); }
   transition: all var(--kd-fast) var(--kd-ease);
 }
 .kd-store:hover { background: var(--kd-ink); border-color: var(--kd-ink); color: #fff; box-shadow: var(--kd-shadow); }
+
+/* A store the app is headed to but has not reached yet — visibly inert,
+   so nobody taps it expecting a download. */
+.kd-store.is-pending {
+  border-style: dashed;
+  color: var(--kd-faint);
+  background: var(--kd-surface);
+  cursor: default;
+}
+.kd-store.is-pending:hover {
+  background: var(--kd-surface);
+  border-color: var(--kd-line-strong);
+  color: var(--kd-faint);
+  box-shadow: none;
+}
 .kd-store .lucide { width: 20px; height: 20px; }
 .kd-store small { display: block; font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; opacity: .62; line-height: 1.2; }
 .kd-store strong { display: block; font-size: .9rem; font-weight: 600; line-height: 1.2; letter-spacing: -0.015em; }

@@ -313,12 +313,31 @@
                 <div class="ad-card-head"><h2>Publishing</h2></div>
                 <div class="ad-card-body">
 
-                  <label class="form-label" for="fStatus">Status</label>
+                  <label class="form-label" for="fStatus">Visibility on the site</label>
                   <select class="form-select mb-3" id="fStatus" name="status">
                     <option value="draft">Draft — not visible</option>
                     <option value="published">Published — live on the site</option>
                     <option value="archived">Archived — hidden, kept on record</option>
                   </select>
+
+                  <label class="form-label" for="fLaunchStatus">Launch state</label>
+                  <select class="form-select mb-2" id="fLaunchStatus" name="launchStatus">
+                    <option value="live">Live — available now</option>
+                    <option value="coming-soon">Coming soon — announced, not released</option>
+                    <option value="in-development">In development — being built</option>
+                    <option value="beta">Beta — limited release</option>
+                  </select>
+                  <div class="form-text mb-3">
+                    Separate from visibility: an app can be published on the site
+                    while still being weeks away from the stores.
+                  </div>
+
+                  <div class="mb-3" id="fExpectedLaunchWrap">
+                    <label class="form-label" for="fExpectedLaunch">Expected launch</label>
+                    <input class="form-control" id="fExpectedLaunch" name="expectedLaunch"
+                           placeholder="Q4 2026, March, or leave blank">
+                    <div class="form-text">Shown beside the "Coming soon" badge. Optional.</div>
+                  </div>
 
                   <div class="form-check form-switch mb-3">
                     <input class="form-check-input" type="checkbox" id="fFeatured" name="featured">

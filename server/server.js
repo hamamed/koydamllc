@@ -108,6 +108,14 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 const PLATFORMS = ['ios', 'android', 'web', 'saas'];
 const STATUSES = ['published', 'draft', 'archived'];
 
+/**
+ * Launch state is separate from publish state. `status` controls whether the
+ * app appears on the site at all; `launchStatus` describes where the product
+ * itself is — so an app can be fully visible and promoted while still being
+ * weeks away from the stores.
+ */
+const LAUNCH_STATUSES = ['live', 'coming-soon', 'in-development', 'beta'];
+
 /** Strips draft/archived apps and any owner-only fields before sending publicly. */
 function publicView(doc) {
   const apps = arr(doc.apps)
@@ -306,6 +314,9 @@ function normaliseApp(body, doc, existing) {
     appStoreUrl: str(body.appStoreUrl, 500),
     webUrl: str(body.webUrl, 500),
     status,
+    // Existing apps have no launchStatus; treat them as already live.
+    launchStatus: LAUNCH_STATUSES.includes(body.launchStatus) ? body.launchStatus : 'live',
+    expectedLaunch: str(body.expectedLaunch, 60),
     featured: Boolean(body.featured),
     order: Number.isFinite(Number(body.order)) ? Number(body.order) : arr(doc.apps).length + 1,
     createdAt: existing ? existing.createdAt : new Date().toISOString(),

@@ -78,6 +78,11 @@
   };
 
   const PLATFORM_LABEL = { ios: 'iOS', android: 'Android', web: 'Web', saas: 'SaaS' };
+  const LAUNCH_LABEL = {
+    'coming-soon': 'Coming soon',
+    'in-development': 'In development',
+    beta: 'Beta',
+  };
 
   /* --------------------------------------------------------------- state */
 
@@ -267,7 +272,11 @@
               ? `<img src="${esc(app.icon)}" alt="" width="32" height="32" style="border-radius:8px;object-fit:cover;border:1px solid var(--kd-line)">`
               : `<span class="kd-app-icon kd-app-icon-fallback" style="width:32px;height:32px;border-radius:8px;font-size:.8rem">${esc((app.title || '?')[0])}</span>`}
             <div class="min-w-0">
-              <div class="kd-ink fw-semibold text-truncate">${esc(app.title)}</div>
+              <div class="kd-ink fw-semibold text-truncate">
+                ${esc(app.title)}
+                ${app.launchStatus && app.launchStatus !== 'live'
+                  ? `<span class="kd-tag kd-tag-accent ms-1">${esc(LAUNCH_LABEL[app.launchStatus] || app.launchStatus)}</span>` : ''}
+              </div>
               <div class="kd-faint small text-truncate">/app/${esc(app.slug)}</div>
             </div>
           </div>
@@ -313,6 +322,9 @@
     $('#fDescription').value = values.description || '';
     $('#fIcon').value = values.icon || '';
     $('#fStatus').value = values.status || 'draft';
+    $('#fLaunchStatus').value = values.launchStatus || 'live';
+    $('#fExpectedLaunch').value = values.expectedLaunch || '';
+    toggleExpectedLaunch();
     $('#fFeatured').checked = Boolean(values.featured);
     $('#fOrder').value = values.order || ((state.doc.apps || []).length + 1);
     $('#fCategory').value = values.category || '';
@@ -342,6 +354,13 @@
     $('#fDescriptionPreview').classList.add('d-none');
     icons();
   }
+
+  /** "Expected launch" only makes sense for an app that has not launched. */
+  function toggleExpectedLaunch() {
+    const live = $('#fLaunchStatus').value === 'live';
+    $('#fExpectedLaunchWrap').classList.toggle('d-none', live);
+  }
+  $('#fLaunchStatus').addEventListener('change', toggleExpectedLaunch);
 
   function renderIconPreview() {
     const url = $('#fIcon').value.trim();
@@ -430,6 +449,8 @@
       playStoreUrl: $('#fPlayStore').value.trim(),
       webUrl: $('#fWebUrl').value.trim(),
       status: $('#fStatus').value,
+      launchStatus: $('#fLaunchStatus').value,
+      expectedLaunch: $('#fExpectedLaunch').value.trim(),
       featured: $('#fFeatured').checked,
       order: Number($('#fOrder').value) || undefined,
     };

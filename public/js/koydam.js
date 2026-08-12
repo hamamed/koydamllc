@@ -55,6 +55,21 @@ const KD = (() => {
     saas:    { label: 'SaaS',    icon: 'cloud' },
   };
 
+  /** Launch states. `live` shows no badge — it is the unremarkable case. */
+  const LAUNCH_META = {
+    'coming-soon':    { label: 'Coming soon',   icon: 'clock',    cls: 'kd-tag-accent' },
+    'in-development': { label: 'In development', icon: 'hammer',  cls: 'kd-tag-warn' },
+    beta:             { label: 'Beta',           icon: 'flask-conical', cls: 'kd-tag-accent' },
+  };
+
+  /** Badge markup for an unlaunched app, or '' when it is live. */
+  function launchBadge(app) {
+    const meta = LAUNCH_META[app.launchStatus];
+    if (!meta) return '';
+    const when = app.expectedLaunch ? ` · ${esc(app.expectedLaunch)}` : '';
+    return `<span class="kd-tag ${meta.cls}"><i data-lucide="${meta.icon}"></i>${esc(meta.label)}${when}</span>`;
+  }
+
   /** Fills elements marked with data-kd="settings.email" etc. from the content doc. */
   function hydrate(doc) {
     const settings = doc.settings || {};
@@ -131,7 +146,7 @@ const KD = (() => {
 
           <p class="mb-3 small" style="color:var(--kd-ink-2)">${esc(app.tagline)}</p>
 
-          <div class="d-flex flex-wrap gap-2 mb-4">${platformTags(app)}</div>
+          <div class="d-flex flex-wrap gap-2 mb-4">${launchBadge(app)}${platformTags(app)}</div>
 
           <div class="mt-auto d-flex align-items-center justify-content-between pt-3 kd-rule-t">
             <a class="kd-arrow-link" href="${href}">View details <i data-lucide="arrow-right"></i></a>
@@ -283,5 +298,8 @@ const KD = (() => {
 
   document.addEventListener('DOMContentLoaded', boot);
 
-  return { $, $$, api, esc, safeUrl, icons, content, appCard, appIcon, platformTags, initReveal, PLATFORM_META };
+  return {
+    $, $$, api, esc, safeUrl, icons, content, appCard, appIcon,
+    platformTags, launchBadge, initReveal, PLATFORM_META, LAUNCH_META,
+  };
 })();
