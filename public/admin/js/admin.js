@@ -1157,6 +1157,12 @@
 
     $('#sCompanyName').value = s.companyName || '';
     $('#sLegalName').value = s.legalName || '';
+    $('#sEntityType').value = s.entityType || '';
+    $('#sSoleMember').value = s.soleMember || '';
+    $('#sRegisteredState').value = s.registeredState || '';
+    $('#sRegisteredDate').value = s.registeredDate || '';
+    $('#sEin').value = s.ein || '';
+    $('#sDuns').value = s.duns || '';
     $('#sTagline').value = s.tagline || '';
     $('#sCopyright').value = s.copyright || '';
     $('#sEmail').value = s.email || '';
@@ -1181,6 +1187,12 @@
         body: JSON.stringify({
           companyName: $('#sCompanyName').value.trim(),
           legalName: $('#sLegalName').value.trim(),
+          entityType: $('#sEntityType').value.trim(),
+          soleMember: $('#sSoleMember').value.trim(),
+          registeredState: $('#sRegisteredState').value.trim(),
+          registeredDate: $('#sRegisteredDate').value,
+          ein: $('#sEin').value.trim(),
+          duns: $('#sDuns').value.trim(),
           tagline: $('#sTagline').value.trim(),
           copyright: $('#sCopyright').value.trim(),
           email: $('#sEmail').value.trim(),

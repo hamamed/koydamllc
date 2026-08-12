@@ -1,11 +1,11 @@
 {
   "settings": {
     "companyName": "Koydam LLC",
-    "legalName": "Koydam LLC",
+    "legalName": "KOYDAM LLC",
     "tagline": "Full-cycle software development studio",
     "email": "hello@koydam.com",
     "supportEmail": "support@koydam.com",
-    "phone": "+1 (307) 555-0142",
+    "phone": "",
     "address": {
       "line1": "30 N Gould St, STE R",
       "city": "Sheridan",
@@ -19,7 +19,13 @@
       "github": "https://github.com/koydam",
       "instagram": ""
     },
-    "copyright": "© {year} Koydam LLC. All rights reserved."
+    "copyright": "© {year} Koydam LLC. All rights reserved.",
+    "entityType": "Sole Member LLC",
+    "soleMember": "Mohamed Hama",
+    "registeredState": "Wyoming",
+    "registeredDate": "2026-04-01",
+    "ein": "98-1927553",
+    "duns": "144552487"
   },
   "home": {
     "eyebrow": "US-based software studio",
@@ -35,8 +41,8 @@
     },
     "stats": [
       {
-        "value": "12+",
-        "label": "Products shipped"
+        "value": "US",
+        "label": "Registered LLC"
       },
       {
         "value": "4",
@@ -47,8 +53,8 @@
         "label": "In-house engineering"
       },
       {
-        "value": "US",
-        "label": "Registered LLC"
+        "value": "2026",
+        "label": "Founded"
       }
     ],
     "aboutTitle": "A small studio, deliberately.",
@@ -132,63 +138,7 @@
       "body": "Store submission, deployment, monitoring, and an agreed maintenance window."
     }
   ],
-  "apps": [
-    {
-      "id": "app_tikhd",
-      "slug": "tikhd",
-      "title": "TIKHD",
-      "tagline": "Watermark-free media downloads at scale",
-      "description": "<p>TIKHD is a high-traffic consumer utility for fast, watermark-free media downloads. It was engineered around two constraints: sub-second response times under load, and full search-engine indexability for a JavaScript-driven interface.</p><p>The service runs on a stateless Node.js API behind an edge cache, with a resolver layer that degrades gracefully when an upstream source changes format.</p>",
-      "features": [
-        "Watermark-free downloads in original resolution",
-        "Audio-only extraction",
-        "Batch queue with progress reporting",
-        "No account required, nothing stored server-side"
-      ],
-      "icon": "",
-      "screenshots": [],
-      "platforms": [
-        "web"
-      ],
-      "category": "Utilities",
-      "version": "2.4.0",
-      "releaseDate": "2025-11-18",
-      "playStoreUrl": "",
-      "appStoreUrl": "",
-      "webUrl": "https://tikhd.io",
-      "status": "published",
-      "featured": true,
-      "order": 1
-    },
-    {
-      "id": "app_civictrust",
-      "slug": "civictrust",
-      "title": "CivicTrust",
-      "tagline": "Public-sector procurement, made legible",
-      "description": "<p>CivicTrust aggregates and normalises public procurement notices into a single searchable index, with alerting for the categories a business actually bids on.</p><p>Built as a SaaS platform with a scheduled ingestion pipeline, a normalisation layer for inconsistent source formats, and role-based team accounts.</p>",
-      "features": [
-        "Daily ingestion from multiple public sources",
-        "Saved searches with email alerts",
-        "Team workspaces and shared shortlists",
-        "CSV and API export"
-      ],
-      "icon": "",
-      "screenshots": [],
-      "platforms": [
-        "web",
-        "saas"
-      ],
-      "category": "Business",
-      "version": "1.2.0",
-      "releaseDate": "2026-02-09",
-      "playStoreUrl": "",
-      "appStoreUrl": "",
-      "webUrl": "https://civictrust.app",
-      "status": "published",
-      "featured": true,
-      "order": 2
-    }
-  ],
+  "apps": [],
   "pages": {
     "privacy": {
       "title": "Privacy Policy",

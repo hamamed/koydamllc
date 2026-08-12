@@ -162,13 +162,29 @@ const STATUSES = ['published', 'draft', 'archived'];
  */
 const LAUNCH_STATUSES = ['live', 'coming-soon', 'in-development', 'beta'];
 
+/**
+ * Settings that must never leave the admin session.
+ *
+ * The EIN is a federal tax identifier: publishing it invites tax-identity
+ * fraud and fraudulent credit applications, and it is not needed to render
+ * anything on the site. It stays in the content store so invoices and records
+ * can use it, but it is stripped from every public response.
+ */
+const PRIVATE_SETTINGS = ['ein'];
+
+function publicSettings(settings = {}) {
+  const copy = { ...settings };
+  for (const key of PRIVATE_SETTINGS) delete copy[key];
+  return copy;
+}
+
 /** Strips draft/archived apps and any owner-only fields before sending publicly. */
 function publicView(doc) {
   const apps = arr(doc.apps)
     .filter((a) => a.status === 'published')
     .sort((a, b) => (a.order || 0) - (b.order || 0));
   return {
-    settings: doc.settings,
+    settings: publicSettings(doc.settings),
     home: doc.home,
     services: doc.services,
     process: doc.process,
@@ -475,6 +491,12 @@ admin.put('/settings', async (req, res) => {
       ...doc.settings,
       companyName: str(b.companyName, 120) || doc.settings.companyName,
       legalName: str(b.legalName, 160),
+      entityType: str(b.entityType, 80),
+      soleMember: str(b.soleMember, 120),
+      registeredState: str(b.registeredState, 80),
+      registeredDate: str(b.registeredDate, 20),
+      ein: str(b.ein, 40),      // never sent to the public API — see PRIVATE_SETTINGS
+      duns: str(b.duns, 40),
       tagline: str(b.tagline, 300),
       email: str(b.email, 160),
       supportEmail: str(b.supportEmail, 160),
